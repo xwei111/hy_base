@@ -1,0 +1,9 @@
+.treeBox{
+  width: 330px;
+}
+.treeSlot{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 12px;
+}

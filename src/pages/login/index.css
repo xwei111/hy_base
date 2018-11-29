@@ -1,0 +1,19 @@
+@import '../../styles/var/color.css';
+.loginBox{
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  & .loginForm{
+    flex: 1;
+    background: rgba(0,0,0,0);
+    padding: 0 35px;
+    & .remberPass{
+      height: 36px;
+      width: 100%;
+      display: flex;
+      & .remberCheck{
+        color: var(--white);
+      }
+    }
+  }
+}

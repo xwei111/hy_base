@@ -1,0 +1,89 @@
+@charset "UTF-8";
+@import './var/base.css';
+@import './var/color.css';
+@import './var/fn.css';
+@import './var/fontSize.css';
+@import './var/layout.css';
+
+/*css 初始化 */
+@custom-selector :--reset html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img, p, span, div, table, tr, td, article, footer, header, nav, audio, video, textarea, button, input;
+@custom-selector :--outline fieldset, img ,input, button; /*去掉input等聚焦时的蓝色边框*/
+@custom-selector :--listStyle ul, li, ol;
+@custom-selector :--verticalAlign select,input;
+@custom-selector :--inputSize select, input, textarea;
+@custom-selector :--hSize h1,h2,h3,h4,h5,h6;
+
+html,body{
+	@apply --baseLayout;
+}
+body {
+	@apply --defaultFontSize;
+	@apply --flexColumn;
+	background: var(--background_color);
+	color: var(--mainText_color);
+	overflow-x: hidden;
+	min-width: 1200px;
+}
+input { 
+	padding-top:0; 
+	padding-bottom:0; 
+	font-family: "SimSun","宋体";
+}
+textarea { 
+	resize:none; 
+} /*防止拖动*/
+img {
+	border:0; 
+	vertical-align:var(--middle); 
+}  /*  去掉图片低测默认的3像素空白缝隙，或者用display：block也可以*/
+table { 
+	border-collapse:collapse; 
+}
+.clearfix{
+	*zoom:1;/*IE/7/6*/
+	&:after{
+		@apply --clearFloat;
+	}
+}
+a {
+	color:var(--black); 
+	text-decoration:none; 
+	&:hover{
+		color:var(--blue);
+	}
+}
+#app{
+	flex: 1;
+	@apply --flexColumn;
+}
+.icon{
+  margin: 0 4px;
+}
+.hide{
+  display: none;
+}
+.el-menu--horizontal>.el-submenu .el-submenu__title{
+	height: 100% !important;
+	display: flex;
+	@apply --flexCenter;
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+	height: 4px;
+	background-color: #F5F5F5;
+}
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background: #fff ;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 2px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color:var(--secondaryText_color);
+}
+::-webkit-scrollbar-thumb:hover {
+	border-radius: 2px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color:var(--secondaryText_color);
+} 

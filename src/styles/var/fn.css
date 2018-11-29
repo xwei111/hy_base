@@ -1,0 +1,11 @@
+/* 清除浮动 */
+:root{
+  --clearFloat:{
+    content:".";
+    clear:both;
+    display:block;
+    height:0;
+    overflow:hidden;
+    visibility:hidden;
+  }
+}

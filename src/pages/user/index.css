@@ -1,0 +1,24 @@
+@import '../../styles/var/color.css';
+@import '../../styles/var/layout.css';
+.userBox{
+  font-size: 18px;
+  cursor: pointer;
+  color: #FFF;
+  @apply --flexRow;
+  @apply --flexSpaceBetween;
+  & .notset{
+    margin: 0 6px;
+  }
+  & .user{
+    width: 30px;
+    height: 16px;
+    margin: 0px 4px 0 0;
+  }
+  & .el-dropdown-link{
+    color: var(--white);
+  }
+  & .more{
+    height: 20px;
+    width: 30px;
+  }
+}

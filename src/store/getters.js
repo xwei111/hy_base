@@ -1,0 +1,9 @@
+export const token = state => state.token
+export const menuRouterData = state => state.menuRouterData
+export const tabData = state => state.tabData
+export const selectTab = state => state.selectTab
+export const themeColor = state => state.themeColor
+export const keepAliveArr = state => state.keepAliveArr
+export const appId = state => state.appId
+export const userId = state => state.userId
+export const menuList = state => state.menuList

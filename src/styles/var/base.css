@@ -1,0 +1,41 @@
+:root{
+	--reset:{
+		margin: 0;
+		padding: 0;
+	};
+	--outline:{
+		outline-style:none;
+		border:none;
+	};
+	--listStyle:{
+		list-style: none;
+	};
+	--middle: middle;
+	--inputSize:{
+		font-size:12px; 
+		margin:0;
+	};
+	--hSize:{
+		text-decoration:none;
+		font-weight:normal;
+		font-size:100%;
+	}
+}
+:--reset {
+	@apply --reset
+}
+:--outline {
+	@apply --outline
+}
+:--listStyle {
+	@apply --listStyle
+}
+:--verticalAlign {
+	vertical-align:var(--middle);
+}
+:--inputSize {
+	@apply --inputSize
+}
+:--hSize {
+	@apply --hSize
+}

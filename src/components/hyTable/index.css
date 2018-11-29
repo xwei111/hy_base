@@ -1,0 +1,9 @@
+.pointer{
+  cursor: pointer;
+}
+.el-icon-edit,.el-icon-delete{
+  margin: 0 3px;
+}
+.text{
+  color: #409EFF;
+}
