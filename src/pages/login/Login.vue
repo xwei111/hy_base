@@ -79,7 +79,6 @@ export default {
     _login(username,pass){
       return login(username,pass).then((res)=>{
         if(res.statusCode == '200') {
-          const { setToken } = this
           const { accessToken } = res.result
           const { expireTime, token } = JSON.parse(accessToken)
           const saveToken = { accessToken: token, xHyToken: res.result['x-hy-token'] }
@@ -94,7 +93,7 @@ export default {
       })
     },
     _addMenuRouter() {
-      return addMenuRouter().then((data)=> data)
+      return addMenuRouter.getMenuRouter().then((data)=> data)
     },
     _setUserInfoCookie(userInfo) {
       if(this.checked) {

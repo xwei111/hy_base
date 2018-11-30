@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store'
-import {getr} from '@/utils/addMenuRouter'
+import addMenuRouter from '@/utils/addMenuRouter'
 
 const Home = resolve => require(['@/pages/home/Home'], resolve)
 const Notfound = resolve => require(['@/pages/404/Notfound'], resolve)
@@ -29,7 +29,7 @@ const router = new Router({
 
 function addcom(val){
   val.map((item)=>{
-    item.component = getr(item.name)
+    item.component = addMenuRouter.getr(item.name)
     if(item.children){
       addcom(item.children)
     }

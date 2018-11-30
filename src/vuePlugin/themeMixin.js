@@ -1,5 +1,6 @@
 import { mapGetters, mapMutations } from 'vuex'
 import config from '@/utils/config'
+import common from '@/utils/common.js'
 
 const themeMixin = {
   data () {
@@ -35,6 +36,7 @@ const themeMixin = {
   methods: {
     // 主题3头部导航选择触发 e:id
     selectTopIdHandle(e) {
+      this.topMenuId = e
       const menuData = JSON.parse(JSON.stringify(this.menuList))
       menuData.map((item)=>{
         if(item.id == e){
@@ -124,20 +126,20 @@ const themeMixin = {
       this.$emit('showThemeConfig')
     },
     _notToWelcome(){
-      const { selectTab, menuList, setTabData, setSelectTab, _findLastChild } = this
+      const { selectTab, menuList, setTabData, setSelectTab } = this
       if(!selectTab){
         const firstData = menuList[0]
-        const defaultId = firstData.path? firstData.id : _findLastChild(firstData).id
+        const defaultId = firstData.path? firstData.id : common.findLastChild(firstData).id
         const defaultTagData = firstData.path?{
           title: firstData.title,
           name: firstData.id,
           path: firstData.path,
           key: firstData.name
         }:{
-          title: _findLastChild(firstData).title,
-          name: _findLastChild(firstData).id,
-          path: _findLastChild(firstData).path,
-          key: _findLastChild(firstData).name
+          title: common.findLastChild(firstData).title,
+          name: common.findLastChild(firstData).id,
+          path: common.findLastChild(firstData).path,
+          key: common.findLastChild(firstData).name
         }
         let arr = []
         arr.push(defaultTagData)
@@ -153,15 +155,6 @@ const themeMixin = {
         key: 'welcome'
       }])
       this.setSelectTab('welcome')
-    },
-    _findLastChild(val) {
-      var lastChild 
-      if(val.children&&val.children.length>0) {
-        return this._findLastChild(val.children[0])
-      }else {
-        lastChild = val
-        return lastChild
-      }
     },
     // 主题3获取第一层数据
     _getFatherData(data) {
@@ -201,7 +194,8 @@ const themeMixin = {
       const { childMenu, threeTopMenuData } = this
       Object.keys(childMenu).map((item)=>{
         if(childMenu[item].name == e.key){
-          this.topMenuId = this.childMenu[item].id
+          this.$nextTick(()=>{ this.topMenuId = this.childMenu[item].id })
+          
         }else{
           this._searchFather(childMenu[item].children,e,item)
         }
@@ -211,8 +205,7 @@ const themeMixin = {
       if(val){
         val.map((data)=>{
           if(data.name == e.key){
-            this.topMenuId = this.childMenu[item].id
-            return
+            this.$nextTick(()=>{ this.topMenuId = this.childMenu[item].id })
           }
           if(data.children){
             this._searchFather(data.children,e,item)

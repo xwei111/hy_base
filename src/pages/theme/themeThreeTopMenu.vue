@@ -9,6 +9,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import common from '@/utils/common.js'
 export default {
   name: 'themeThreeTopMenu',
   props:{
@@ -39,23 +40,14 @@ export default {
       menuList.map((item)=>{
       	if(item.id == e.id){
       		if(item.children){
-      			this.$router.push(this._findLastChild(item.children[0]).path)
-      			this.selectPath = this._findLastChild(item.children[0]).path 
+      			this.$router.push(common.findLastChild(item.children[0]).path)
+      			this.selectPath = common.findLastChild(item.children[0]).path 
       		}else{
       			this.$router.push(item.path)
       			this.selectPath = item.path 
       		}
       	}
       })
-    },
-    _findLastChild(val) {
-      var lastChild 
-      if(val.children&&val.children.length>0) {
-        return this._findLastChild(val.children[0])
-      }else {
-        lastChild = val
-        return lastChild
-      }
     }
   },
   watch: {
