@@ -46,7 +46,7 @@ class AddMenuRouter {
 		})
 		this.keepAliveArr['welcome'] = {
 			keepAlive: true,
-				closeTabs: true
+			closeTabs: true
 		}
 		this.mainRoutes[0].redirect = '/welcome'
 	}
@@ -77,8 +77,8 @@ class AddMenuRouter {
 	}
 	async getMenuRouter(){
 		const menudata = await this._getMenuData()
-		await store.commit('SET_MENULIST',JSON.parse(JSON.stringify(menudata)))
 		await this.getchild(menudata)
+		await store.commit('SET_MENULIST',JSON.parse(JSON.stringify(menudata)))
 		await store.commit('SET_KEEPALIVEARR',this.keepAliveArr)
 		const mainRoutes = await this.addMainRoutes()
 		return mainRoutes

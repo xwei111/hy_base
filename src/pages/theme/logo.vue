@@ -1,5 +1,5 @@
 <template>
-  <div class='logoBox hy_logoBg'>
+  <div class='logoBox'>
     <img class='logo' v-if='isCollapse' src='../../assets/smallLogo.png' />
     <img class='logo' v-else src='../../assets/logo.png' />
   </div>

@@ -1,18 +1,22 @@
 <template>
   <div class='themeFirst'>
-    <hyMenu 
-      :isCollapse='isCollapse' 
-      :menuData='menuData' 
-      :bgColor='themeColor.hy_sliderBg' 
-      :textColor='themeColor.hy_silderColor' 
-      :activeTextColor='themeColor.hy_silderActiveColor'
-      :router='router' 
-      :mode='mode' 
-      :defaultActive='$route.path' 
-      @selectMenu='selectMenu'
-    >
+    <div class='menuBox hy_sliderBg'>
       <logo :isCollapse='isCollapse'></logo>
-    </hyMenu>
+      <div class='menuBottom hy_sliderBg'>
+        <hyMenu 
+          :isCollapse='isCollapse' 
+          :menuData='menuData' 
+          :bgColor='themeColor.hy_sliderBg' 
+          :textColor='themeColor.hy_silderColor' 
+          :activeTextColor='themeColor.hy_silderActiveColor'
+          :router='router' 
+          :mode='mode' 
+          :defaultActive='$route.path' 
+          @selectMenu='selectMenu'
+        >
+        </hyMenu>
+      </div>
+    </div>
     <div class='mainBox'>
       <div class='flexSpace hy_headerBg'>
         <div>

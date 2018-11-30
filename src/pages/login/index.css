@@ -15,5 +15,8 @@
         color: var(--white);
       }
     }
+    & .loginBtn{
+      width: 100%;
+    }
   }
 }

@@ -60,7 +60,7 @@ export default {
     uniqueOpen: {
       type: Boolean,
       default() {
-        return true
+        return false
       }
     },
     router: {

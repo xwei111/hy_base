@@ -51,40 +51,24 @@ const themeMixin = {
       this.selectMenu(e)
     },
     // 选择导航栏
-    selectMenu(index) {
-      const { _findSelectMenu, _removeRepeat, tabData, menuRouterData, setSelectTab, m_setPagesCache, setTabData } = this
+    async selectMenu(index) {
       // 找到选择的导航
-      _findSelectMenu(menuRouterData,index)
-      const selectMenuList = this.selectMenuList;
+      await this._findSelectMenu(this.menuRouterData,index)
       // 设置选中的tabs
-      setSelectTab(selectMenuList.id)
+      await this.setSelectTab(this.selectMenuList.id)
       // 缓存页面
-      m_setPagesCache(selectMenuList.name)
+      await this.m_setPagesCache(this.selectMenuList.name)
       // tabs是否重复
-      _removeRepeat(tabData,selectMenuList).then((res)=>{
-        if(!res){
-          let arr = JSON.parse(JSON.stringify(tabData))
-          arr.push({
-            title: selectMenuList.title,
-            name: selectMenuList.id,
-            path: selectMenuList.path,
-            key: selectMenuList.name
-          })
-          this.$nextTick(()=>{
-            setTabData(arr)
-          })
-        }
-      })
+      await this._removeRepeat(this.tabData,this.selectMenuList)
     },
     // 移除tabs
-    removeTab(removeData, tabsData, activeName, nextT){
-      const { m_removePagesCache, setTabData, setSelectTab  } = this
+    async removeTab(removeData, tabsData, activeName, nextT){
       // 去除页面缓存
-      m_removePagesCache(removeData[0].key)
+      await this.m_removePagesCache(removeData[0].key)
       // 设置tabs数据
-      setTabData(tabsData)
+      await this.setTabData(tabsData)
       // 设置当前被选中tabs
-      setSelectTab(activeName)
+      await this.setSelectTab(activeName)
       if(nextT) this.$router.push(nextT.path)
       if(nextT) this._getActivePage(nextT)
     },
@@ -100,17 +84,16 @@ const themeMixin = {
       if(val){
         val.map((item)=>{
           if(item.children&&item.children.length>0){
-            this._findSelectMenu(item.children,key)
+            return this._findSelectMenu(item.children,key)
           }else{
             if(item.path == key){
               this.selectMenuList = item
-              return
             }
           }
         })
       }
     },
-    _removeRepeat(val,obj) {
+    removeRepeat(val,obj) {
       const p = new Promise((resolve,reject)=>{
         let ifRepeat = false
         val.map((item)=>{
@@ -121,6 +104,22 @@ const themeMixin = {
         resolve(ifRepeat)
       })
       return p
+    },
+    _removeRepeat(val,obj){
+      this.removeRepeat(val,obj).then((res)=>{
+        if(!res){
+          let arr = JSON.parse(JSON.stringify(val))
+          arr.push({
+            title: obj.title,
+            name: obj.id,
+            path: obj.path,
+            key: obj.name
+          })
+          this.$nextTick(()=>{
+            this.setTabData(arr)
+          })
+        }
+      })
     },
     showThemeConfig() {
       this.$emit('showThemeConfig')
