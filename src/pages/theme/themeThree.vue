@@ -1,47 +1,54 @@
 <template>
-  <div class='themeTwo'>
-      <div class='flexSpace hy_headerBg'>
-        <div class='leftLogo'>
-          <logo :isCollapse='isCollapse'></logo>
-        </div>
-        <div class='rightMenuUser flexSpace'>
+  <div class='themeFirst'>
+
+    <div class='flexSpace hy_headerBg'>
+
+        <div class='leftHeader'>
+          <div class='hy_logoBg hy_transition' :class="isCollapse?'smallLeftLogo':'leftLogo'">
+            <logo :isCollapse='isCollapse'></logo>
+          </div>
           <themeThreeTopMenu :threeTopMenuData='threeTopMenuData' @selectTopIdHandle='selectTopIdHandle' @selectPathHandle='selectPathHandle' :topMenuId='topMenuId'></themeThreeTopMenu>
-          <User @showThemeConfig='showThemeConfig'></User>
         </div>
+        <User @showThemeConfig='showThemeConfig'></User>
       </div>
 
-      <div class='mainContentBox'>
-      	<div v-if='menuData' class='menuBox'>
-      		<hyMenu 
-	          :isCollapse='isCollapse' 
-	          :menuData='menuData' 
-	          :bgColor='themeColor.hy_sliderBg' 
-	          :textColor='themeColor.hy_silderColor' 
-	          :activeTextColor='themeColor.hy_silderActiveColor'
-	          :router='router' 
-	          :mode='mode' 
-	          :defaultActive='$route.path' 
-	          @selectMenu='selectMenu'
-	          
-	        >
-	        </hyMenu>
-      	</div>
+    <div class='mainBox'>
+      <el-scrollbar class='hy_sliderBg'>
+        <div v-if='menuData'>
+          <hyMenu 
+            :isCollapse='isCollapse' 
+            :menuData='menuData' 
+            :bgColor='themeColor.hy_sliderBg' 
+            :textColor='themeColor.hy_silderColor' 
+            :activeTextColor='themeColor.hy_silderActiveColor'
+            :router='router' 
+            :mode='mode' 
+            :defaultActive='$route.path' 
+            @selectMenu='selectMenu'
+          >
+          </hyMenu>
+        </div>
+      </el-scrollbar>
+      <div class='contentBox'>
+        <hyTabs  
+          v-if='ifShowTabs' 
+          :tabData='tabData' 
+          :selectTab='selectTab' 
+          @removeTab='removeTab' 
+          @tabClick='tabClick'>
+        </hyTabs>
         
-        <div class="leftMainContent">
-          <hyTabs
-            v-if='ifShowTabs' 
-            :tabData='tabData' 
-            :selectTab='selectTab' 
-            @removeTab='removeTab' 
-            @tabClick='tabClick'>
-          </hyTabs>
-          <keep-alive>
-              <router-view class='mainContent' v-if="$route.meta.keepAlive"></router-view>
-          </keep-alive>
-          <router-view v-if="!$route.meta.keepAlive" class='mainContent'></router-view>
-        </div>
-
+        <keep-alive>
+            <el-scrollbar v-if="$route.meta.keepAlive" class='mainContentScroll'>
+              <router-view class="mainContent"></router-view>
+            </el-scrollbar>
+        </keep-alive>
+        <el-scrollbar v-if="!$route.meta.keepAlive" class='mainContentScroll'>
+          <router-view class="mainContent"></router-view>
+        </el-scrollbar>
       </div>
+      
+    </div>
   </div>
 </template>
 
@@ -77,6 +84,6 @@ export default {
 }
 </script>
 <style scoped>
-@import './three.css';
+@import './theme.css';
 </style>
 

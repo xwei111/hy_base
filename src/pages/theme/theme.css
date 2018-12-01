@@ -1,0 +1,54 @@
+@import '../../styles/var/layout.css';
+@import '../../styles/var/color.css';
+.flexSpace{
+  min-height: 48px;
+  @apply --flexRow;
+  @apply --flexSpaceBetween;
+}
+.hy_transition{
+	transition: all 0.4s;
+}
+.themeFirst{
+	flex: 1;
+	@apply --flexColumn;
+	overflow: hidden;
+	& .leftHeader{
+		@apply --flexRow;
+		@apply --flexCenter;
+		& .leftLogo{
+			width: 200px;
+			min-height: 48px;
+		}
+		& .smallLeftLogo{
+			width: 63.8px;
+			min-height: 48px;
+		}
+		& .closeOrexpend{
+			width: 20px;
+			height: 20px;
+			cursor: pointer;
+			margin-left: 20px;
+		}
+	}
+	& .mainBox{
+		flex: 1;
+		@apply --flexRow;
+		overflow: hidden;
+		& .contentBox{
+			flex: 1;
+			@apply --flexColumn;
+			overflow: hidden;
+			& .mainContentScroll{
+				flex: 1;
+				background: #fff;
+				margin: 3px;
+				border-radius: 5px;
+				& .mainContent{
+					padding: 10px;
+				}
+			}
+		}
+		
+	}
+	
+}

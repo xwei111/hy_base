@@ -1,29 +1,29 @@
 <template>
-  <div class='themeTwo'>
-      <div class='flexSpace hy_headerBg'>
-        <div class='leftLogo'>
+  <div class='themeFirst'>
+    <div class='flexSpace hy_headerBg'>
+      <div class='leftHeader'>
+        <div class='hy_logoBg hy_transition' :class="isCollapse?'smallLeftLogo':'leftLogo'">
           <logo :isCollapse='isCollapse'></logo>
         </div>
-        <div class='rightMenuUser flexSpace'>
-          <hyMenu 
-            :isCollapse='isCollapse' 
-            :menuData='menuList' 
-            :bgColor='themeColor.hy_sliderBg' 
-            :textColor='themeColor.hy_silderColor' 
-            :activeTextColor='themeColor.hy_silderActiveColor'
-            :router='router' 
-            :mode='mode' 
-            :defaultActive='$route.path' 
-            @selectMenu='selectMenu'
-          >
-          </hyMenu>
-          <User @showThemeConfig='showThemeConfig'></User>
-        </div>
+        <hyMenu 
+          :isCollapse='isCollapse' 
+          :menuData='menuList' 
+          :bgColor='themeColor.hy_sliderBg' 
+          :textColor='themeColor.hy_silderColor' 
+          :activeTextColor='themeColor.hy_silderActiveColor'
+          :router='router' 
+          :mode='mode' 
+          :defaultActive='$route.path' 
+          @selectMenu='selectMenu'
+        >
+        </hyMenu>
       </div>
+      <User @showThemeConfig='showThemeConfig'></User>
+    </div>
 
-      <div class='mainContentBox'>
-        <hyTabs 
-          class='hyTabs' 
+    <div class='mainBox'>
+      <div class='contentBox'>
+        <hyTabs  
           v-if='ifShowTabs' 
           :tabData='tabData' 
           :selectTab='selectTab' 
@@ -32,11 +32,16 @@
         </hyTabs>
         
         <keep-alive>
-            <router-view class='mainContent' v-if="$route.meta.keepAlive"></router-view>
+            <el-scrollbar v-if="$route.meta.keepAlive" class='mainContentScroll'>
+              <router-view class="mainContent"></router-view>
+            </el-scrollbar>
         </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive" class='mainContent'></router-view>
-
+        <el-scrollbar v-if="!$route.meta.keepAlive" class='mainContentScroll'>
+          <router-view class="mainContent"></router-view>
+        </el-scrollbar>
       </div>
+      
+    </div>
   </div>
 </template>
 
@@ -70,6 +75,6 @@ export default {
 }
 </script>
 <style scoped>
-@import './two.css';
+@import './theme.css';
 </style>
 

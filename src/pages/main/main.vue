@@ -17,7 +17,6 @@
 <script>
 import { hyConfigTheme } from '@/components'
 import themeFirst from '../theme/themeFirst'
-import test from '../theme/test'
 import themeTwo from '../theme/themeTwo'
 import themeThree from '../theme/themeThree'
 import config from '@/utils/config' 
@@ -34,8 +33,7 @@ export default {
     hyConfigTheme,
     themeFirst,
     themeTwo,
-    themeThree,
-    test
+    themeThree
   },
   created() {
     const ifShowTabs = window.localStorage.getItem('ifShowTabs')

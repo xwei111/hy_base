@@ -1,8 +1,20 @@
 <template>
   <div class='themeFirst'>
-    <div class='menuBox hy_sliderBg'>
-      <logo :isCollapse='isCollapse'></logo>
-      <div class='menuBottom hy_sliderBg'>
+    <div class='flexSpace hy_headerBg'>
+      <div class='leftHeader'>
+        <div class='hy_logoBg hy_transition' :class="isCollapse?'smallLeftLogo':'leftLogo'">
+          <logo :isCollapse='isCollapse'></logo>
+        </div>
+        <div>
+          <img @click='isCollapse=true' :class="isCollapse?'hide':'closeOrexpend'" src='../../assets/s.png'>
+          <img @click='isCollapse=false' :class="isCollapse?'closeOrexpend':'hide'" src='../../assets/z.png'>
+        </div>
+      </div>
+      <User @showThemeConfig='showThemeConfig'></User>
+    </div>
+
+    <div class='mainBox'>
+      <el-scrollbar class='hy_sliderBg'>
         <hyMenu 
           :isCollapse='isCollapse' 
           :menuData='menuData' 
@@ -15,31 +27,26 @@
           @selectMenu='selectMenu'
         >
         </hyMenu>
-      </div>
-    </div>
-    <div class='mainBox'>
-      <div class='flexSpace hy_headerBg'>
-        <div>
-          <img @click='isCollapse=true' :class="isCollapse?'hide':'closeOrexpend'" src='../../assets/s.png'>
-          <img @click='isCollapse=false' :class="isCollapse?'closeOrexpend':'hide'" src='../../assets/z.png'>
-        </div>
-        <User @showThemeConfig='showThemeConfig'></User>
-      </div>
-      <div class='mainContentBox'>
-        <hyTabs 
-          class='hyTabs' 
+      </el-scrollbar>
+      <div class='contentBox'>
+        <hyTabs  
           v-if='ifShowTabs' 
           :tabData='tabData' 
           :selectTab='selectTab' 
           @removeTab='removeTab' 
           @tabClick='tabClick'>
         </hyTabs>
-
+        
         <keep-alive>
-            <router-view class='mainContent' v-if="$route.meta.keepAlive"></router-view>
+            <el-scrollbar v-if="$route.meta.keepAlive" class='mainContentScroll'>
+              <router-view class="mainContent"></router-view>
+            </el-scrollbar>
         </keep-alive>
-        <router-view class='mainContent' v-if="!$route.meta.keepAlive"></router-view>
+        <el-scrollbar v-if="!$route.meta.keepAlive" class='mainContentScroll'>
+          <router-view class="mainContent"></router-view>
+        </el-scrollbar>
       </div>
+      
     </div>
   </div>
 </template>
@@ -50,7 +57,7 @@ import { hyMenu, hyTabs } from '@/components'
 import logo from './logo'
 import themeMixin from '@/vuePlugin/themeMixin'
 export default {
-  name: 'Main',
+  name: 'ThemeFirst',
   mixins:[themeMixin],
   data() {
     return {
@@ -82,6 +89,6 @@ export default {
 }
 </script>
 <style scoped>
-@import './first.css';
+@import './theme.css';
 </style>
 
