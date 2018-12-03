@@ -24,13 +24,7 @@ const themeMixin = {
     }
   },
   created() {
-    if(!this.tabData.length){
-      if(!config.ifToWelcome) {
-        this._notToWelcome()
-      }else{
-        this._toWelcome()
-      }
-    }
+    if(!this.tabData.length) config.ifToWelcome ? this._toWelcome() : this._notToWelcome()
     this._getFatherData(this.menuList)
   },
   methods: {
@@ -38,13 +32,7 @@ const themeMixin = {
     selectTopIdHandle(e) {
       this.topMenuId = e
       const menuData = JSON.parse(JSON.stringify(this.menuList))
-      menuData.map((item)=>{
-        if(item.id == e){
-          this.$nextTick(()=>{
-            this.menuData = item.children
-          })
-        }
-      })
+      this.menuData = menuData.find((item)=> item.id == e).children || []
     },
     // 主题3头部导航选择触发 e:path
     selectPathHandle(e) {
@@ -94,16 +82,11 @@ const themeMixin = {
       }
     },
     removeRepeat(val,obj) {
-      const p = new Promise((resolve,reject)=>{
+      return new Promise((resolve,reject)=>{
         let ifRepeat = false
-        val.map((item)=>{
-          if(item.name == obj.id){
-            ifRepeat =true
-          }
-        })
+        ifRepeat = val.some((item) => item.name == obj.id)
         resolve(ifRepeat)
       })
-      return p
     },
     _removeRepeat(val,obj){
       this.removeRepeat(val,obj).then((res)=>{
@@ -194,7 +177,6 @@ const themeMixin = {
       Object.keys(childMenu).map((item)=>{
         if(childMenu[item].name == e.key){
           this.$nextTick(()=>{ this.topMenuId = this.childMenu[item].id })
-          
         }else{
           this._searchFather(childMenu[item].children,e,item)
         }
@@ -203,12 +185,8 @@ const themeMixin = {
     _searchFather(val,e,item) {
       if(val){
         val.map((data)=>{
-          if(data.name == e.key){
-            this.$nextTick(()=>{ this.topMenuId = this.childMenu[item].id })
-          }
-          if(data.children){
-            this._searchFather(data.children,e,item)
-          }
+          if(data.name == e.key) this.$nextTick(()=>{ this.topMenuId = this.childMenu[item].id })
+          data.children && this._searchFather(data.children,e,item)
         })
       }
     },

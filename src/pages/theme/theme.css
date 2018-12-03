@@ -12,6 +12,7 @@
 	flex: 1;
 	@apply --flexColumn;
 	overflow: hidden;
+	min-width: 1200px;
 	& .leftHeader{
 		@apply --flexRow;
 		@apply --flexCenter;
@@ -48,7 +49,5 @@
 				}
 			}
 		}
-		
 	}
-	
 }

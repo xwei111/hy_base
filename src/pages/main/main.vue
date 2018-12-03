@@ -4,6 +4,7 @@
     <themeFirst v-if="themeType==='1'" :themeType='themeType' @showThemeConfig='showThemeConfig' :ifShowTabs='ifShowTabs'></themeFirst>
     <themeTwo v-if="themeType==='2'" :themeType='themeType' @showThemeConfig='showThemeConfig' :ifShowTabs='ifShowTabs'></themeTwo>
     <themeThree v-if="themeType==='3'" :themeType='themeType' @showThemeConfig='showThemeConfig' :ifShowTabs='ifShowTabs'></themeThree>
+    <themeFour v-if="themeType==='4'" :themeType='themeType' @showThemeConfig='showThemeConfig' :ifShowTabs='ifShowTabs'></themeFour>
     <hyConfigTheme 
       :showConfigTheme='showConfigTheme' 
       @closeConfigTheme='closeConfigTheme' 
@@ -19,6 +20,7 @@ import { hyConfigTheme } from '@/components'
 import themeFirst from '../theme/themeFirst'
 import themeTwo from '../theme/themeTwo'
 import themeThree from '../theme/themeThree'
+import themeFour from '../theme/themeFour'
 import config from '@/utils/config' 
 export default {
   name: 'Main',
@@ -33,7 +35,8 @@ export default {
     hyConfigTheme,
     themeFirst,
     themeTwo,
-    themeThree
+    themeThree,
+    themeFour
   },
   created() {
     const ifShowTabs = window.localStorage.getItem('ifShowTabs')
@@ -62,6 +65,9 @@ export default {
           break;
         case 2:
           this.themeType = '3'
+          break;
+        case 3:
+          this.themeType = '4'
           break;
       }
     },

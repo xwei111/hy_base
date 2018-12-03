@@ -23,6 +23,12 @@
               <span>主题三</span>
             </div>
           </li>
+          <li class='themeFirst' :class="selectId==3?'selectTheme':''" @click='changeThemeHandle(3)'>
+            <div class='themeMain themeFour'>
+              <div></div>
+              <span>主题四</span>
+            </div>
+          </li>
         </ul>
 
         <div class='themeColor'>
@@ -206,7 +212,4 @@ export default {
 
 <style scoped>
 @import './index.css';
-</style>
-<style>
-
 </style>

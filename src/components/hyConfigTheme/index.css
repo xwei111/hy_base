@@ -74,6 +74,9 @@
             background: #ccc;
           }
         }
+        & .themeFour{
+          height: 80px;
+        }
       }
       & .themeTwo{
         & div{
