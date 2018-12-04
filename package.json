@@ -5,11 +5,35 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:devtest": "better-npm-run build_devtest",
+    "build:cz": "better-npm-run build_cz",
+    "build:cn": "better-npm-run build_cn"
+  },
+  "betterScripts": {
+    "build_devtest": {
+      "command": "vue-cli-service build",
+      "env": {
+        "NODE_ENV": "devtest"
+      }
+    },
+    "build_cz": {
+      "command": "vue-cli-service build",
+      "env": {
+        "NODE_ENV": "cz"
+      }
+    },
+    "build_cn": {
+      "command": "vue-cli-service build",
+      "env": {
+        "NODE_ENV": "cn"
+      }
+    }
   },
   "dependencies": {
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
+    "better-npm-run": "^0.1.1",
     "element-ui": "^2.4.9",
     "normalize.css": "^8.0.1",
     "postcss-cssnext": "^3.1.0",

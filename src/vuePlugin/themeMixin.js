@@ -98,9 +98,7 @@ const themeMixin = {
             path: obj.path,
             key: obj.name
           })
-          this.$nextTick(()=>{
-            this.setTabData(arr)
-          })
+          this.$nextTick(()=>this.setTabData(arr))
         }
       })
     },
@@ -110,6 +108,7 @@ const themeMixin = {
     _notToWelcome(){
       const { selectTab, menuList, setTabData, setSelectTab } = this
       if(!selectTab){
+        let arr = []
         const firstData = menuList[0]
         const defaultId = firstData.path? firstData.id : common.findLastChild(firstData).id
         const defaultTagData = firstData.path?{
@@ -123,7 +122,6 @@ const themeMixin = {
           path: common.findLastChild(firstData).path,
           key: common.findLastChild(firstData).name
         }
-        let arr = []
         arr.push(defaultTagData)
         setTabData(arr)
         setSelectTab(defaultId)
@@ -153,7 +151,6 @@ const themeMixin = {
               component: item.component?item.component:''
             })
           })
-          
           if(selectTopId&&item.id == selectTopId) {
             this.menuData = item.children || []
           }else{

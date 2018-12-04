@@ -15,8 +15,10 @@
 	min-width: 1200px;
 	& .leftHeader{
 		@apply --flexRow;
-		@apply --flexCenter;
+		overflow: hidden;
 		& .leftLogo{
+			@apply --flexCenter;
+			display: flex;
 			width: 200px;
 			min-height: 48px;
 		}
@@ -29,6 +31,10 @@
 			height: 20px;
 			cursor: pointer;
 			margin-left: 20px;
+		}
+		& .collapse{
+			@apply --flexCenter;
+			display: flex;
 		}
 	}
 	& .mainBox{

@@ -46,7 +46,7 @@ export default {
         if(valid) {
           this.oneByone()
         } else {
-          reject('error')
+          console.log('error submit!!');
           return false;
         }
       })
@@ -54,15 +54,17 @@ export default {
     async oneByone(){
       const userInfo = await this._loginRcs()
       const loginData = await this._login(userInfo.username, userInfo.pass)
-      await this.setToken(loginData.token)
-      await this._setUserInfoCookie(loginData.userInfo)
-      await this.setUserid(loginData.username)
-      const benData = await this._getWorkBenchData(loginData.username)
-      await this.setAppid(benData[0].appId)
-      const menuRouter = await this._addMenuRouter()
-      await this.setMenuRouterData(JSON.parse(JSON.stringify(menuRouter)))
-      await this.$router.addRoutes(menuRouter);
-      await this.$router.push('/main')
+      if(loginData){
+        await this.setToken(loginData.token)
+        await this._setUserInfoCookie(loginData.userInfo)
+        await this.setUserid(loginData.username)
+        const benData = await this._getWorkBenchData(loginData.username)
+        benData&&await this.setAppid(benData[0].appId)
+        const menuRouter = await this._addMenuRouter()
+        await this.setMenuRouterData(JSON.parse(JSON.stringify(menuRouter)))
+        await this.$router.addRoutes(menuRouter);
+        await this.$router.push('/main')
+      }
     },
     _loginRcs(){
       return loginRcs().then((res)=>{

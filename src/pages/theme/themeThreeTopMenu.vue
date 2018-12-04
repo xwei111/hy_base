@@ -87,6 +87,7 @@ export default {
 .threeTopMenu{
   flex: 1;
   display: flex;
+  @apply --flexCenter;
   & li{
     cursor: pointer;
     padding: 5px 15px;

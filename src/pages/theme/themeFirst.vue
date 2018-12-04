@@ -5,7 +5,7 @@
         <div class='hy_logoBg hy_transition' :class="isCollapse?'smallLeftLogo':'leftLogo'">
           <logo :isCollapse='isCollapse'></logo>
         </div>
-        <div>
+        <div class='collapse'>
           <img @click='isCollapse=true' :class="isCollapse?'hide':'closeOrexpend'" src='../../assets/s.png'>
           <img @click='isCollapse=false' :class="isCollapse?'closeOrexpend':'hide'" src='../../assets/z.png'>
         </div>

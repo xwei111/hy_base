@@ -13,8 +13,7 @@
       </div>
 
     <div class='mainBox'>
-      <el-scrollbar class='hy_sliderBg'>
-        <div v-if='menuData'>
+      <el-scrollbar v-if='menuData.length' class='hy_sliderBg'>
           <hyMenu 
             :isCollapse='isCollapse' 
             :menuData='menuData' 
@@ -27,7 +26,6 @@
             @selectMenu='selectMenu'
           >
           </hyMenu>
-        </div>
       </el-scrollbar>
       <div class='contentBox'>
         <hyTabs  
