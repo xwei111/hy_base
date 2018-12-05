@@ -1,51 +1,50 @@
 <template>
   <div class='div'>
-    <hyTableTree :data='data' :columns='columns'></hyTableTree>
+    <hyTable :tableData='tableData' :column='column' :ifIsExpand='ifIsExpand' :isHaveEdit='isHaveEdit'></hyTable>
   </div>
 </template>
 
 <script>
-import { hyTableTree } from '@/components'
+import { hyTable } from '@/components'
 export default {
   name: 'defineCenterConst',
   data () {
     return {
-      data:[{
+      ifIsExpand: true,
+      isHaveEdit: true,
+      tableData:[{
         id: 1,
         name:'hehe',
         children:[{
           id:3,
-          name:'xixi'
+          name:'xixi',
+          children:[{
+            id:5,
+            name:'xixi'
+          }]
         }]
       },{
         id: 2,
-        name:'hehe'
-      }],
-      columns: [{
-        value: 'id',
-        text: '标识'
+        name:'hehe',
+        children:[{
+          id:4,
+          name:'enen'
+        }]
       },{
-        value: 'name',
-        text: '姓名'
-      }],
-      tableData: [{
-        id: 1,
-        name:'hehe'
-      },{
-        id: 2,
-        name:'hehe'
+        id:6,
+        name:'666'
       }],
       column: [{
-        key: 'id',
+        key:'id',
         label: '标识'
       },{
-        key: 'name',
+        key:'name',
         label: '姓名'
-      }],
+      }]
     }
   },
   components:{
-    hyTableTree
+    hyTable
   },
   created() {
     
