@@ -62,7 +62,7 @@ export default {
         benData&&await this.setAppid(benData[0].appId)
         const menuRouter = await this._addMenuRouter()
         await this.setMenuRouterData(JSON.parse(JSON.stringify(menuRouter)))
-        await this.$router.addRoutes(menuRouter);
+        await this.$router.addRoutes(menuRouter)
         await this.$router.push('/main')
       }
     },

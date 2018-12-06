@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <el-scrollbar>
     Notfound
-  </div>
+  </el-scrollbar>
 </template>
 
 <script>

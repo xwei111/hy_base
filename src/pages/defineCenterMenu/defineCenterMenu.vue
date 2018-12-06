@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <el-scrollbar>
     defineCenterMenu
-  </div>
+  </el-scrollbar>
 </template>
 
 <script>

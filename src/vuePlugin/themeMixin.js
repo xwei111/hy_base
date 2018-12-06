@@ -1,5 +1,5 @@
 import { mapGetters, mapMutations } from 'vuex'
-import config from '@/utils/config'
+import { config } from '@/utils/config' 
 import common from '@/utils/common.js'
 
 const themeMixin = {
@@ -69,17 +69,15 @@ const themeMixin = {
       }
     },
     _findSelectMenu(val,key) {
-      if(val){
-        val.map((item)=>{
-          if(item.children&&item.children.length>0){
-            return this._findSelectMenu(item.children,key)
-          }else{
-            if(item.path == key){
-              this.selectMenuList = item
-            }
+      val&&val.map((item)=>{
+        if(item.children&&item.children.length>0){
+          return this._findSelectMenu(item.children,key)
+        }else{
+          if(item.path == key){
+            this.selectMenuList = item
           }
-        })
-      }
+        }
+      })
     },
     removeRepeat(val,obj) {
       return new Promise((resolve,reject)=>{
@@ -92,12 +90,7 @@ const themeMixin = {
       this.removeRepeat(val,obj).then((res)=>{
         if(!res){
           let arr = JSON.parse(JSON.stringify(val))
-          arr.push({
-            title: obj.title,
-            name: obj.id,
-            path: obj.path,
-            key: obj.name
-          })
+          arr = [...arr,{ title: obj.title, name: obj.id, path: obj.path, key: obj.name }]
           this.$nextTick(()=>this.setTabData(arr))
         }
       })
@@ -122,18 +115,13 @@ const themeMixin = {
           path: common.findLastChild(firstData).path,
           key: common.findLastChild(firstData).name
         }
-        arr.push(defaultTagData)
+        arr=[...arr,defaultTagData]
         setTabData(arr)
         setSelectTab(defaultId)
       }
     },
     _toWelcome(){
-      this.setTabData([{
-        title: '欢迎',
-        name: 'welcome',
-        path: '/welcome',
-        key: 'welcome'
-      }])
+      this.setTabData([{title: '欢迎',name: 'welcome',path: '/welcome',key: 'welcome'}])
       this.setSelectTab('welcome')
     },
     // 主题3获取第一层数据
@@ -180,12 +168,10 @@ const themeMixin = {
       })
     },
     _searchFather(val,e,item) {
-      if(val){
-        val.map((data)=>{
-          if(data.name == e.key) this.$nextTick(()=>{ this.topMenuId = this.childMenu[item].id })
-          data.children && this._searchFather(data.children,e,item)
-        })
-      }
+      val&&val.map((data)=>{
+        if(data.name == e.key) this.$nextTick(()=>{ this.topMenuId = this.childMenu[item].id })
+        data.children && this._searchFather(data.children,e,item)
+      })
     },
     ...mapMutations({
       setTabData: 'SET_TABDATA',

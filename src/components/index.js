@@ -7,6 +7,7 @@ import hyElementTheme from './hyElementTheme'
 import hyMenu from './hyMenu'
 import hyTabs from './hyTabs'
 import hyConfigTheme from './hyConfigTheme'
+import hyForm from './hyForm'
 
 export {
   hyTable,
@@ -17,5 +18,6 @@ export {
   hyElementTheme,
   hyMenu,
   hyTabs,
-  hyConfigTheme
+  hyConfigTheme,
+  hyForm
 }

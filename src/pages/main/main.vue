@@ -21,7 +21,7 @@ import themeFirst from '../theme/themeFirst'
 import themeTwo from '../theme/themeTwo'
 import themeThree from '../theme/themeThree'
 import themeFour from '../theme/themeFour'
-import config from '@/utils/config' 
+import { config } from '@/utils/config' 
 export default {
   name: 'Main',
   data () {

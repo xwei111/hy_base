@@ -37,13 +37,9 @@
         </hyTabs>
         
         <keep-alive>
-            <el-scrollbar v-if="$route.meta.keepAlive" class='mainContentScroll'>
-              <router-view class="mainContent"></router-view>
-            </el-scrollbar>
+          <router-view v-if="$route.meta.keepAlive" class="mainContentScroll"></router-view>
         </keep-alive>
-        <el-scrollbar v-if="!$route.meta.keepAlive" class='mainContentScroll'>
-          <router-view class="mainContent"></router-view>
-        </el-scrollbar>
+        <router-view v-if="!$route.meta.keepAlive" class="mainContentScroll"></router-view>
       </div>
       
     </div>

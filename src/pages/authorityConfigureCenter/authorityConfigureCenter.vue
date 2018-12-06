@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <el-scrollbar>
     authorityConfigureCenter
-  </div>
+  </el-scrollbar>
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 import { getMenuData } from '@/api/menu'
 import store from '@/store'
-import config from './config'
+import { config } from './config'
 import common from './common.js'
 
 const main = resolve => require(['@/pages/main/main'], resolve)
@@ -17,7 +17,7 @@ class AddMenuRouter {
 		return resolve => require([`@/pages/${com}/${com}.vue`], resolve)
 	}
 	getchild(val) {
-		if(val) {
+		if(val&&val.length>0) {
 			val.map((item)=>{
 				item.meta = { keepAlive: true }
 				item.icon = item.icon ?item.icon : ''

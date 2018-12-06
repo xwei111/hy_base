@@ -71,7 +71,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import hyElementTheme from '../hyElementTheme'
 import hyButtons from '../hyButtons'
-import config from '@/utils/config' 
+import { config } from '@/utils/config' 
 export default {
   name: 'hyConfigTheme',
   props: {

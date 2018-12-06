@@ -69,3 +69,14 @@ a {
 .el-scrollbar__wrap {
   overflow-x: hidden !important;
 }
+.hy_searchBox{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 10px 20px 0 0;
+  & .hy_searchAddBtn{
+    margin-top: 1px;
+    margin-right: 20px;
+  }
+}

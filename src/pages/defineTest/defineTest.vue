@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <el-scrollbar>
     defineTest
-  </div>
+  </el-scrollbar>
 </template>
 
 <script>

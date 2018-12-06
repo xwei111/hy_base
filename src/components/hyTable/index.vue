@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="formatData" @selection-change="handleSelectionChange" @expand-change="handleExpandChange" :row-style="showRow" v-bind="$attrs" :header-cell-style='headerCellStyle' :cell-style='cellStyle' style="width: 100%">
+    <el-table :data="formatData" @selection-change="handleSelectionChange" @expand-change="handleExpandChange" :row-style="showRow" v-bind="$attrs" :header-cell-style='headerCellStyle' :cell-style='cellStyle' :size='size' style="width: 100%">
       <!-- 是否显示序列 -->
       <el-table-column type="index" width="55" v-if="ifHaveIndex" align='center'>
       </el-table-column>
@@ -12,8 +12,8 @@
         <template slot-scope="scope">
           <span v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
           <span class="tree-ctrl" v-if="iconShow(0,scope.row)" @click="toggleExpanded(scope.$index)">
-            <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
-            <i v-else class="el-icon-minus"></i>
+            <i v-if="!scope.row._expanded" class="el-icon-plus pointer"></i>
+            <i v-else class="el-icon-minus pointer"></i>
           </span>
           {{scope.$index}}
         </template>
@@ -22,8 +22,8 @@
         <template slot-scope="scope">
           <span v-if="index === 0" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
           <span class="tree-ctrl" v-if="iconShow(index,scope.row)" @click="toggleExpanded(scope.$index)">
-            <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
-            <i v-else class="el-icon-minus"></i>
+            <i v-if="!scope.row._expanded" class="el-icon-plus pointer"></i>
+            <i v-else class="el-icon-minus pointer"></i>
           </span>
           {{scope.row[column.value]}}
         </template>
@@ -39,10 +39,11 @@
         </template>
       </el-table-column>
       <!-- 修改删除操作 -->
-      <el-table-column label='操作' align='center' width='150' v-if='isHaveEdit||isHaveDelete||isHaveSuspend||isHaveRecovery'>
+      <el-table-column label='操作' align='center' width='150' v-if='isHaveEdit||isHaveDelete||isHaveSuspend||isHaveRecovery||isHaveAdd'>
         <template slot-scope="scope">
           <i class="el-icon-edit pointer" v-if='isHaveEdit' @click='editHandle(scope)'></i>
           <i class="el-icon-delete pointer" v-if='isHaveDelete' @click='deleteHandle(scope)'></i>
+          <i class="el-icon-circle-plus-outline pointer" v-if='isHaveAdd' @click="addHandle(scope)"></i>
           <span class="text pointer" v-if='isHaveSuspend&&!scope.row.ifZ' @click='suspendHandle(scope)'>暂停</span>
           <span class="text pointer" v-if='isHaveRecovery&&scope.row.ifZ' @click='recoveryHandle(scope)'>恢复</span>
         </template>
@@ -66,6 +67,8 @@
  * @function editHandle(scope) 修改事件,scope为修改行数据
  * @param {isHaveDelete} 是否有删除
  * @function deleteHandle(scope) 删除事件,scope为删除行数据
+ * @param {isHaveAdd} 是否有添加
+ * @function addHandle(scope) 添加事件,scope为添加行数据
  * @param {isHaveSuspend} 是否有暂停
  * @function suspendHandle(scope) 暂停事件,scope为暂停行数据
  * @param {isHaveSuspend} 是否有恢复
@@ -92,6 +95,10 @@ export default {
         return []
       }
     },
+    size:{
+      type: String,
+      default:()=>'medium '
+    },
     expandCloumns: {
       type: Array,
       default: () => [{width: '100'}]
@@ -103,6 +110,12 @@ export default {
       }
     },
     isHaveDelete: {
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
+    isHaveAdd: {
       type: Boolean,
       default() {
         return false
@@ -178,6 +191,9 @@ export default {
     },
     deleteHandle(scope) {
       this.$emit('deleteHandle', scope)
+    },
+    addHandle(scope){
+      this.$emit('addHandle', scope)
     },
     suspendHandle(scope) {
       this.$emit('suspendHandle', scope)

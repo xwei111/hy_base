@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <el-scrollbar>
     timeMessage
-  </div>
+  </el-scrollbar>
 </template>
 
 <script>

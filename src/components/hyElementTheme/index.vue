@@ -8,7 +8,7 @@
 /**
  * @param {size} 尺寸类型 medium / small / mini
  */
-import config from '@/utils/config' 
+import { config } from '@/utils/config' 
 const version = require("element-ui/package.json").version; // 版本号
 const ORIGINAL_THEME = config.themeColor.hy_element;
 
