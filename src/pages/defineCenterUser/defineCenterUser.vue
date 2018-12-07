@@ -1,7 +1,7 @@
 <template>
-  <el-scrollbar>
+  <div>
     defineCenterUser
-  </el-scrollbar>
+  </div>
 </template>
 
 <script>

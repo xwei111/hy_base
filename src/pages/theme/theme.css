@@ -50,6 +50,9 @@
 				background: #fff;
 				margin: 3px;
 				border-radius: 5px;
+				& .mainContent{
+					padding-bottom: 30px;
+				}
 			}
 		}
 	}

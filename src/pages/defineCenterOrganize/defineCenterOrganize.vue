@@ -1,7 +1,7 @@
 <template>
-  <el-scrollbar>
+  <div>
     defineCenterOrganize
-  </el-scrollbar>
+  </div>
 </template>
 
 <script>

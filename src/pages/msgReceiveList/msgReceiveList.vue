@@ -1,7 +1,7 @@
 <template>
-  <el-scrollbar>
+  <div>
     msgReceiveList
-  </el-scrollbar>
+  </div>
 </template>
 
 <script>

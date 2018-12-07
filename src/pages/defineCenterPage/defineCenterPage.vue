@@ -1,7 +1,7 @@
 <template>
-  <el-scrollbar>
+  <div>
     defineCenterPage
-  </el-scrollbar>
+  </div>
 </template>
 
 <script>

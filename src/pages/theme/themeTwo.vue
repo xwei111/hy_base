@@ -31,10 +31,12 @@
           @tabClick='tabClick'>
         </hyTabs>
         
-        <keep-alive>
-          <router-view v-if="$route.meta.keepAlive" class="mainContentScroll"></router-view>
-        </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive" class="mainContentScroll"></router-view>
+        <el-scrollbar class='mainContentScroll scrollBox'>
+          <keep-alive>
+            <router-view v-if="$route.meta.keepAlive" class='mainContent'></router-view>
+          </keep-alive>
+          <router-view v-if="!$route.meta.keepAlive" class='mainContent'></router-view>
+        </el-scrollbar>
       </div>
       
     </div>

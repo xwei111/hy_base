@@ -1,7 +1,7 @@
 <template>
-  <el-scrollbar>
+  <div>
     <h1>欢迎！！！</h1>
-  </el-scrollbar>
+  </div>
 </template>
 
 <script>

@@ -2,9 +2,9 @@
   <div>
     <el-dialog :title="title" :visible.sync="dialogVisible" width="600px" :before-close="closeHandle">
       <slot></slot>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="closeHandle">取 消</el-button>
-        <el-button type="primary" @click="sureHandle">确 定</el-button>
+      <span slot="footer" class="dialog-footer" v-if='ifCancle||ifSure' >
+        <el-button @click="closeHandle" v-if='ifCancle'>取 消</el-button>
+        <el-button type="primary" v-if='ifSure' @click="sureHandle">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -26,15 +26,19 @@ export default {
   props: {
     dialogVisible: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:()=>false
+    },
+    ifCancle: {
+      type: Boolean,
+      default:()=>false
+    },
+    ifSure: {
+      type: Boolean,
+      default:()=>false
     },
     title: {
       type: String,
-      default() {
-        return ''
-      }
+      default:()=>''
     }
   },
   data() {

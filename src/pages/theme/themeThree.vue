@@ -13,7 +13,7 @@
       </div>
 
     <div class='mainBox'>
-      <el-scrollbar v-if='menuData.length' class='hy_sliderBg'>
+      <el-scrollbar v-if='menuData.length' class='hy_sliderBg scrollBox'>
           <hyMenu 
             :isCollapse='isCollapse' 
             :menuData='menuData' 
@@ -36,10 +36,12 @@
           @tabClick='tabClick'>
         </hyTabs>
         
-        <keep-alive>
-          <router-view v-if="$route.meta.keepAlive" class="mainContentScroll"></router-view>
-        </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive" class="mainContentScroll"></router-view>
+        <el-scrollbar class='mainContentScroll scrollBox'>
+          <keep-alive>
+            <router-view v-if="$route.meta.keepAlive" class='mainContent'></router-view>
+          </keep-alive>
+          <router-view v-if="!$route.meta.keepAlive" class='mainContent'></router-view>
+        </el-scrollbar>
       </div>
       
     </div>
