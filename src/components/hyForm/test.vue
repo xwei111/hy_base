@@ -1,11 +1,11 @@
 <template>
   <el-form ref='form' :rules='rules' :inline="ifInLine" :model="formData" class="" :size='size' :label-position="labelPosition">
-
+    
     <el-form-item v-for='item in formConfig' :key='item.key' :label="item.label" :prop='item.key'>
-      <!-- input -->
-      <el-input v-if="item.type == 'input'" v-model="formData[item.key]" :placeholder="item.placeholder" :disabled='item.disabled'></el-input>
-      <!-- select -->
-      <el-select v-if="item.type == 'select'" class='elFormSelect' v-model="formData[item.key]" :placeholder="item.placeholder">
+
+    	<el-input v-if="item.type == 'input'" v-model="formData[item.key]" :placeholder="item.placeholder" :disabled='item.disabled'></el-input>
+
+    	<el-select v-if="item.type == 'select'" class='elFormSelect' v-model="formData[item.key]" :placeholder="item.placeholder">
         <el-option
           v-for="v in item.options"
           :key="v.value"
@@ -16,9 +16,10 @@
 
     </el-form-item>
 
+
     <slot></slot>
     <!-- submit -->
-    <el-form-item :class="ifSearch2?'submitBox':''">
+    <el-form-item class='submitBox'>
       <el-button v-if='ifSearch1' type="primary" icon="el-icon-search" @click="onSubmit"></el-button>
       <el-button v-if='ifSearch2' type="primary" @click="onSubmit">确定</el-button>
       <el-button v-if='ifSearch2' @click="onCancle">取消</el-button>
@@ -33,7 +34,7 @@
  * @param {formConfig} 表单配置
  */
 export default {
-  name: 'hySearchForm',
+  name: 'Test',
   props: {
     size:{
       type: String,
@@ -66,43 +67,41 @@ export default {
     formConfig:{
       type: Array,
       default() {
-        return []
-        // return [{
-        //   type:'input',
-        //   placeholder: '常量编码',
-        //   key: 'constcode',
-        //   label: '常量编码',
-        //   disabled: false
-        // },{
-        //   type:'select',
-        //   placeholder:'有效状态',
-        //   key: 'validstate',
-        //   label: '有效状态',
-        //   options:[{
-        //     label:'有效',
-        //     value:'1'
-        //   },{
-        //     label:'无效',
-        //     value: '0'
-        //   }]
-        // },{
-        //   type:'input',
-        //   placeholder: '常量名字',
-        //   key: 'constname',
-        //   label: '常量名字',
-        //   disabled: false
-        // }]
+        return [{
+        	type:'input',
+          placeholder: '常量编码',
+          key: 'constcode',
+          label: '常量编码',
+          disabled: false
+        },{
+        	type:'select',
+          placeholder:'有效状态',
+          key: 'validstate',
+          label: '有效状态',
+          options:[{
+            label:'有效',
+            value:'1'
+          },{
+            label:'无效',
+            value: '0'
+          }]
+        },{
+        	type:'input',
+          placeholder: '常量名字',
+          key: 'constname',
+          label: '常量名字',
+          disabled: false
+        }]
       }
     },
     formData: {
       type: Object,
       default() {
-        return {}
-        // return {
-        //   constcode: '',
-        //   constname: '',
-        //   validstate:''
-        // }
+        return {
+        	constcode: '',
+        	validstate: '',
+        	constname: ''
+        }
       }
     }
   },

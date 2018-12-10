@@ -27,6 +27,22 @@ const vuePlugin = () => {
     },
     methods:{
       /**
+       * api请求 (适用于类似操作)
+       * @param {api} 方法
+       * @param {params} 参数
+       * @param {message} 回调提示信息
+       */
+      m_apiFn(api,params,message){
+        return new Promise((resolve)=>{
+          api(params).then((data)=>{
+            if(data.statusCode == '200'){
+              message&&this.$message.success(message)
+              resolve(data)
+            }
+          })
+        })
+      },
+      /**
        * 重置表单操作
        * @param {formName} 表单ref名 
        */

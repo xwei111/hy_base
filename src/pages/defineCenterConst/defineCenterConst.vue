@@ -3,7 +3,7 @@
     <div class='hy_searchBox'>
       <hyForm :formConfig='formConfig' :formData='formData' @onSubmit='onSubmit' :ifSearch1='ifSearch1'></hyForm>
       <div>
-        <el-button class='hy_searchAddBtn' type="success" icon="el-icon-plus" size='small' @click='addHandle'></el-button>
+        <el-button class='hy_searchAddBtn' type="success" icon="el-icon-plus" size='small' @click='addConstHandle'></el-button>
       </div>
     </div>
     <hyTable 
@@ -14,6 +14,8 @@
       :isHaveDelete='isHaveDelete' 
       :isHaveAdd='isHaveAdd'
       @editHandle='editHandle'
+      @addHandle='addHandle'
+      @deleteHandle='deleteHandle'
     >  
     </hyTable>
     <div class='hy_searchBox'>
@@ -27,15 +29,15 @@
         :total="total">
       </el-pagination>
     </div>
-    <hyModal :dialogVisible='dialogVisible' :title='title' @closeHandle='closeHandle'>
+    <hyModal :dialogVisible='constDialogVisible' :title='title' @closeHandle='closeHandle'>
       <hyForm 
-        :formConfig='addConstformConfig' 
-        :formData='addConstformData' 
+        :formConfig='constformConfig' 
+        :formData='constformData' 
         :ifInLine='ifInLine' 
         :ifSearch2='ifSearch2' 
-        :rules='addConstRules'
-        :clearAll ='dialogVisible'
-        @onSubmit='addConstonSubmit' 
+        :rules='constRules'
+        :clearAll ='constDialogVisible'
+        @onSubmit='constonSubmit' 
         @onCancle='onCancle'
       >
       </hyForm>
@@ -45,29 +47,12 @@
 
 <script>
 import { hyTable, hyForm, hyModal } from '@/components'
-import { getConstData, addConst } from '@/api/defineCenterConst'
+import { getConstData, addConst, changeConst, addConstVal, changeConstVal, deleteConst, deleteConstVal } from '@/api/defineCenterConst'
+import { formConfig, columnConfig } from './config'
 export default {
   name: 'defineCenterConst',
   data () {
-    var checkCode = (rule, value, callback) => {
-      const reg = /^[A-Za-z0-9_]+$/
-      if (reg.test(value)) {
-        callback()
-      } else {
-        return callback(new Error('正确编码格式为:长度在1~100之间,只能包含字母数字或者下划线'))
-      }
-    }
-    var checkOrder = (rule, value, callback) => {
-      if (value === '' || value === null) {
-        callback()
-        return
-      }
-      if (value > 0 && value < 100) {
-        callback()
-      } else {
-        return callback(new Error('顺序只能为1-99的数字'))
-      }
-    }
+    
     return {
       ifIsExpand: true,
       isHaveEdit: true,
@@ -78,59 +63,18 @@ export default {
       searchObj:{page: 1,rows: 10,dictHeadId: '',dictHeadName: '',dictHeadState: ''},
       tableData:[],
       total: 0,
-      column: [
-        {key:'id',label: '常量编码'},
-        {key:'name',label: '常量名称'},
-        {key:'typeName',label: '常量类型'},
-        {key:'desc',label: '常量描述'},
-        {key:'stateName',label: '是否有效'},
-        {key:'sort',label: '顺序'}
-      ],
+      column: columnConfig,
       typeobj:{'0':'系统级常量','1':'常量级常量','2':'应用级常量'},
       stateobj:{'0':'无效','1':'有效'},
-      formConfig:{
-        inputObj:[
-          { placeholder: '常量编码', key: 'dictHeadId', label: '' },
-          { placeholder: '常量名称', key: 'dictHeadName', label: '' }
-        ],
-        selectObj:[
-          {placeholder:'有效状态',key: 'dictHeadState',label: '',options:[{label:'有效',value:'1'},{label:'无效',value: '0'}]}
-        ]
-      },
-      formData:{dictHeadId: '',dictHeadName: '',dictHeadState:''},
-      dialogVisible: false,
+      formConfig:formConfig.searchConfig,
+      formData:formConfig.searchData,
+      constDialogVisible: false,
       title: '新增常量',
       ifInLine: false,
-      addConstformConfig: {
-        inputObj: [
-          { placeholder: '请输入常量编码', key: 'dictHeadId', label: '常量编码' },
-          { placeholder: '请输入常量名称', key: 'dictHeadName', label: '常量名称' },
-          { placeholder: '请输入常量描述', key: 'dictHeadDesc', label: '常量描述' },
-          { placeholder: '请输入顺序', key: 'dictHeadSort', label: '顺序' },
-        ],
-        selectObj: [
-          {placeholder:'请选择',key: 'dictHeadType',label: '常量类型',options:[{label:'系统级常量',value:'0'},{label:'常量级常量',value: '1'},{label:'应用级常量',value: '2'}]},
-          {placeholder:'有效状态',key: 'dictHeadState',label: '有效性',options:[{label:'有效',value:'1'},{label:'无效',value: '0'}]}
-        ]
-      },
-      addConstformData: {dictHeadId: '',dictHeadName:'',dictHeadType:'',dictHeadState:'',dictHeadDesc:'',dictHeadSort:''},
-      addConstRules: {
-        dictHeadName: [
-          { required: true, message: '常量名称不能为空', trigger: 'blur' }
-        ],
-        dictHeadType: [
-          { required: true, message: '常量类型不能为空', trigger: 'blur' }
-        ],
-        dictHeadSort: [
-          { required: false, trigger: 'blur' },
-          { validator: checkOrder, trigger: 'blur' }
-        ],
-        dictHeadId: [
-          { required: true, message: '常量编码不能为空', trigger: 'blur' },
-          { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' },
-          { validator: checkCode, trigger: 'blur' }
-        ]
-      }
+      constformConfig: formConfig.constConfig,
+      constformData: formConfig.constFormData,
+      constRules: formConfig.constRules,
+      uuid: ''
     }
   },
   components:{
@@ -156,47 +100,147 @@ export default {
       this.searchObj.page = e
       this._getConstData(this.searchObj)
     },
-    addHandle() {
-      this.dialogVisible = true
+    addConstHandle() {
+      this._setForm('新增常量',formConfig.constConfig,formConfig.constFormData,false,formConfig.constRules)
+      this.constDialogVisible = true
     },
     closeHandle() {
-      this.dialogVisible = false
+      this.constDialogVisible = false
     },
-    addConstonSubmit(e) {
-      this.addConstformData = Object.assign(this.addConstformData, e)
-      this._addConst(this.addConstformData)
+    constonSubmit(e) {
+      switch(this.title) {
+        case '新增常量':
+          var {dictHeadSort, ...otherObj} = e
+          if(dictHeadSort) otherObj.dictHeadSort = dictHeadSort
+          this._addConst(otherObj)
+          break
+        case '修改常量':
+          this.constformData = Object.assign(this.constformData, e)
+          var {dictHeadSort, ...otherObj} = this.constformData
+          if(dictHeadSort) otherObj.dictHeadSort = dictHeadSort
+          this._changeConst(this.uuid, otherObj)
+          break
+        case '新增常量值':
+          var {dictSort, ...otherObj} = e
+          if(dictSort) otherObj.dictSort = dictSort
+          this._addConstVal(otherObj)
+          break
+        case '修改常量值':
+          this.constformData = Object.assign(this.constformData, e)
+          var {dictSort, ...otherObj} = this.constformData
+          if(dictSort) otherObj.dictSort = dictSort
+          this._changeConstVal(this.uuid, otherObj)
+          break
+      }
     },
     onCancle() {
-      this.dialogVisible = false
+      this.constDialogVisible = false
     },
     editHandle(e) {
-      console.log('e',e)
+      e.row.parent?this._SetConstValdetail(e):this._setConstdetail(e)
+      this.constDialogVisible = true
+    },
+    addHandle(e){
+      this._setForm('新增常量值',formConfig.constValConfig,formConfig.constValFormData,false,formConfig.constValRules)
+      this.constformData.dictHeadId = e.row.dictHeadId
+      this.constformData.parentId = e.row.floor === '1' ? '' : e.row.id
+      this.constDialogVisible = true
+    },
+    deleteHandle(e) {
+      const { floor, children, dictHeadId, uuid } = e.row
+      if(children&&children.length>0){
+        this.$message.warning('该父项有子项的值，请先删除子项')
+        return
+      }
+      if(floor){
+        this._deleteConst(uuid,{dictHeadId:dictHeadId})
+      }else{
+        this._deleteConstVal(uuid)
+      }
+    },
+    _setConstdetail(e) {
+      this._setForm('修改常量',formConfig.constConfig,formConfig.constFormData,true,formConfig.constRules)
+      const { dictHeadId, dictHeadName, dictHeadType, dictHeadState, dictHeadDesc, dictHeadSort, uuid } = e.row
+      this.constformData = {
+        dictHeadId:dictHeadId, 
+        dictHeadName:dictHeadName, 
+        dictHeadType: dictHeadType,
+        dictHeadState:dictHeadState, 
+        dictHeadDesc:dictHeadDesc, 
+        dictHeadSort:dictHeadSort,
+      }
+      this.uuid = uuid
+    },
+    _SetConstValdetail(e) {
+      this._setForm('修改常量值', formConfig.constValConfig, formConfig.constValFormData, true, formConfig.constValRules)
+      const { dictId, dictName, dictDesc, dictSort, dictHeadId, id, uuid } = e.row
+      this.constformData = {
+        dictId:dictId, 
+        dictName:dictName, 
+        dictDesc: dictDesc,
+        dictSort:dictSort,
+        parentId: e.row.floor === '1' ? '' : id,
+        dictHeadId: dictHeadId
+      }
+      this.uuid = uuid
+    },
+    _setForm(title,config,formdata,dis,rule) {
+      this.title = title
+      this.constformConfig = config
+      this.constformData = formdata
+      this.constformConfig[0].disabled = dis
+      this.constRules = rule
     },
     _getConstData(searchObj) {
-      getConstData(searchObj).then((data)=>{
-        if(data.statusCode == '200') {
-          const { rows, total } = data.result
-          rows.map(item=>{
-            item.typeName = this.typeobj[item.type] || ''
-            item.stateName = this.stateobj[item.state] || ''
-          })
-          this.tableData = rows
-          this.total = total
-        }
+      this.m_apiFn(getConstData,searchObj).then((data)=>{
+        const { rows, total } = data.result
+        rows.map(item=>{
+          item.typeName = this.typeobj[item.type] || ''
+          item.stateName = this.stateobj[item.state] || ''
+        })
+        this.tableData = rows
+        this.total = total
       })
     },
     _addConst(obj) {
-      addConst(obj).then((data)=>{
-        if(data.statusCode == '200'){
-          this.$message.success('新增常量成功')
-          this._getConstData(this.searchObj)
-          this.dialogVisible = false
-        }
+      this.m_apiFn(addConst,obj,'新增常量成功').then(()=>{
+        this._getConstData(this.searchObj)
+        this.constDialogVisible = false
+      })
+    },
+    _changeConst(uuid, obj) {
+      const params = {uuid:uuid,obj:obj}
+      this.m_apiFn(changeConst,params,'修改常量成功').then(()=>{
+        this._getConstData(this.searchObj)
+        this.constDialogVisible = false
+      })
+    },
+    _addConstVal(obj) {
+      this.m_apiFn(addConstVal,obj,'新增常量值成功').then(()=>{
+        this._getConstData(this.searchObj)
+        this.constDialogVisible = false
+      })
+    },
+    _changeConstVal(uuid, obj) {
+      const params = {uuid:uuid,obj:obj}
+      this.m_apiFn(changeConstVal,params,'修改常量值成功').then(()=>{
+        this._getConstData(this.searchObj)
+        this.constDialogVisible = false
+      })
+    },
+    _deleteConst(uuid,obj){
+      const params = {uuid:uuid,obj:obj}
+      this.m_apiFn(deleteConst,params,'删除常量成功').then(()=>{
+        this._getConstData(this.searchObj)
+        this.constDialogVisible = false
+      })
+    },
+    _deleteConstVal(uuid) {
+      this.m_apiFn(deleteConstVal,uuid,'删除常量值成功').then(()=>{
+        this._getConstData(this.searchObj)
+        this.constDialogVisible = false
       })
     }
   }
 }
 </script>
-<style scoped>
-/* @import './index.css'; */
-</style>
