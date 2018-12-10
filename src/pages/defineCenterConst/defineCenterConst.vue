@@ -161,28 +161,32 @@ export default {
     _setConstdetail(e) {
       this._setForm('修改常量',formConfig.constConfig,formConfig.constFormData,true,formConfig.constRules)
       const { dictHeadId, dictHeadName, dictHeadType, dictHeadState, dictHeadDesc, dictHeadSort, uuid } = e.row
-      this.constformData = {
-        dictHeadId:dictHeadId, 
-        dictHeadName:dictHeadName, 
-        dictHeadType: dictHeadType,
-        dictHeadState:dictHeadState, 
-        dictHeadDesc:dictHeadDesc, 
-        dictHeadSort:dictHeadSort,
-      }
-      this.uuid = uuid
+      this.$nextTick(()=>{
+        this.constformData = {
+          dictHeadId:dictHeadId, 
+          dictHeadName:dictHeadName, 
+          dictHeadType: dictHeadType,
+          dictHeadState:dictHeadState, 
+          dictHeadDesc:dictHeadDesc, 
+          dictHeadSort:dictHeadSort,
+        }
+        this.uuid = uuid
+      })
     },
     _SetConstValdetail(e) {
       this._setForm('修改常量值', formConfig.constValConfig, formConfig.constValFormData, true, formConfig.constValRules)
       const { dictId, dictName, dictDesc, dictSort, dictHeadId, id, uuid } = e.row
-      this.constformData = {
-        dictId:dictId, 
-        dictName:dictName, 
-        dictDesc: dictDesc,
-        dictSort:dictSort,
-        parentId: e.row.floor === '1' ? '' : id,
-        dictHeadId: dictHeadId
-      }
-      this.uuid = uuid
+      this.$nextTick(()=>{
+        this.constformData = {
+          dictId:dictId, 
+          dictName:dictName, 
+          dictDesc: dictDesc,
+          dictSort:dictSort,
+          parentId: e.row.floor === '1' ? '' : id,
+          dictHeadId: dictHeadId
+        }
+        this.uuid = uuid
+      })
     },
     _setForm(title,config,formdata,dis,rule) {
       this.title = title
@@ -202,44 +206,30 @@ export default {
         this.total = total
       })
     },
+    _successFn() {
+      this._getConstData(this.searchObj)
+      this.constDialogVisible = false
+    },
     _addConst(obj) {
-      this.m_apiFn(addConst,obj,'新增常量成功').then(()=>{
-        this._getConstData(this.searchObj)
-        this.constDialogVisible = false
-      })
+      this.m_apiFn(addConst,obj,'新增常量成功').then(()=>this._successFn())
     },
     _changeConst(uuid, obj) {
       const params = {uuid:uuid,obj:obj}
-      this.m_apiFn(changeConst,params,'修改常量成功').then(()=>{
-        this._getConstData(this.searchObj)
-        this.constDialogVisible = false
-      })
+      this.m_apiFn(changeConst,params,'修改常量成功').then(()=>this._successFn())
     },
     _addConstVal(obj) {
-      this.m_apiFn(addConstVal,obj,'新增常量值成功').then(()=>{
-        this._getConstData(this.searchObj)
-        this.constDialogVisible = false
-      })
+      this.m_apiFn(addConstVal,obj,'新增常量值成功').then(()=>this._successFn())
     },
     _changeConstVal(uuid, obj) {
       const params = {uuid:uuid,obj:obj}
-      this.m_apiFn(changeConstVal,params,'修改常量值成功').then(()=>{
-        this._getConstData(this.searchObj)
-        this.constDialogVisible = false
-      })
+      this.m_apiFn(changeConstVal,params,'修改常量值成功').then(()=>this._successFn())
     },
-    _deleteConst(uuid,obj){
+    _deleteConst(uuid, obj) {
       const params = {uuid:uuid,obj:obj}
-      this.m_apiFn(deleteConst,params,'删除常量成功').then(()=>{
-        this._getConstData(this.searchObj)
-        this.constDialogVisible = false
-      })
+      this.m_apiFn(deleteConst,params,'删除常量成功').then(()=>this._successFn())
     },
     _deleteConstVal(uuid) {
-      this.m_apiFn(deleteConstVal,uuid,'删除常量值成功').then(()=>{
-        this._getConstData(this.searchObj)
-        this.constDialogVisible = false
-      })
+      this.m_apiFn(deleteConstVal,uuid,'删除常量值成功').then(()=>this._successFn())
     }
   }
 }

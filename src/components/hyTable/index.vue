@@ -39,11 +39,12 @@
         </template>
       </el-table-column>
       <!-- 修改删除操作 -->
-      <el-table-column label='操作' align='center' width='150' v-if='isHaveEdit||isHaveDelete||isHaveSuspend||isHaveRecovery||isHaveAdd'>
+      <el-table-column label='操作' align='center' width='150' v-if='isHaveEdit||isHaveDelete||isHaveSuspend||isHaveRecovery||isHaveAdd||isHaveChangePass'>
         <template slot-scope="scope">
           <i class="el-icon-edit pointer" v-if='isHaveEdit' @click='editHandle(scope)'></i>
           <i class="el-icon-delete pointer" v-if='isHaveDelete' @click='deleteHandle(scope)'></i>
           <i class="el-icon-circle-plus-outline pointer" v-if='isHaveAdd' @click="addHandle(scope)"></i>
+          <i class="el-icon-edit-outline pointer" v-if='isHaveChangePass' @click="changePassHandle(scope)"></i>
           <span class="text pointer" v-if='isHaveSuspend&&!scope.row.ifZ' @click='suspendHandle(scope)'>暂停</span>
           <span class="text pointer" v-if='isHaveRecovery&&scope.row.ifZ' @click='recoveryHandle(scope)'>恢复</span>
         </template>
@@ -69,6 +70,8 @@
  * @function deleteHandle(scope) 删除事件,scope为删除行数据
  * @param {isHaveAdd} 是否有添加
  * @function addHandle(scope) 添加事件,scope为添加行数据
+ * @param {isHaveChangePass} 是否有修改密码
+ * @function changePassHandle(scope) 修改密码事件,scope为添加行数据
  * @param {isHaveSuspend} 是否有暂停
  * @function suspendHandle(scope) 暂停事件,scope为暂停行数据
  * @param {isHaveSuspend} 是否有恢复
@@ -85,15 +88,11 @@ export default {
   props: {
     tableData: {
       type: Array,
-      default() {
-        return []
-      }
+      default:() => []
     },
     column: {
       type: Array,
-      default() {
-        return []
-      }
+      default:() => []
     },
     size:{
       type: String,
@@ -105,57 +104,43 @@ export default {
     },
     isHaveEdit: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:() => false
     },
     isHaveDelete: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:() => false
     },
     isHaveAdd: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:() => false
+    },
+    isHaveChangePass: {
+      type: Boolean,
+      default:() => false
     },
     isHaveSuspend: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:() => false
     },
     isHaveRecovery: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:() => false
     },
     showLen: {
       type: Number,
-      default() {
-        return 0
-      }
+      default:() => 0
     },
     ifHaveCheckBox: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:() => false
     },
     ifIsExpand: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:() => false
     },
     ifHaveIndex: {
       type: Boolean,
-      default() {
-        return false
-      }
+      default:() => false
     },
     evalFunc: Function,
     evalArgs: Array,
@@ -193,6 +178,9 @@ export default {
       this.$emit('deleteHandle', scope)
     },
     addHandle(scope){
+      this.$emit('addHandle', scope)
+    },
+    changePassHandle(scope) {
       this.$emit('addHandle', scope)
     },
     suspendHandle(scope) {

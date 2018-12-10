@@ -32,10 +32,10 @@ export const formConfig = {
   constConfig:[
     { type: 'input', placeholder: '请输入常量编码', key: 'dictHeadId', label: '常量编码' },
     { type: 'input', placeholder: '请输入常量名称', key: 'dictHeadName', label: '常量名称' },
-    { type: 'input', placeholder: '请输入常量描述', key: 'dictHeadDesc', label: '常量描述' },
-    { type: 'input', placeholder: '请输入顺序', key: 'dictHeadSort', label: '顺序' },
     { type: 'select', placeholder:'请选择',key: 'dictHeadType',label: '常量类型',options:[{label:'系统级常量',value:'0'},{label:'常量级常量',value: '1'},{label:'应用级常量',value: '2'}]},
-    { type: 'select', placeholder:'有效状态',key: 'dictHeadState',label: '有效性',options:[{label:'有效',value:'1'},{label:'无效',value: '0'}]}
+    { type: 'select', placeholder:'有效状态',key: 'dictHeadState',label: '有效性',options:[{label:'有效',value:'1'},{label:'无效',value: '0'}]},
+    { type: 'input', placeholder: '请输入常量描述', key: 'dictHeadDesc', label: '常量描述' },
+    { type: 'input', placeholder: '请输入顺序', key: 'dictHeadSort', label: '顺序' }
   ],
   constFormData:{
   	dictHeadId: '',

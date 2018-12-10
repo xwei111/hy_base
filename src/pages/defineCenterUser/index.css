@@ -1,0 +1,8 @@
+@import '../../styles/var/layout.css';
+.userTopSearch{
+	@apply --flexRow;
+	@apply --flexSpaceBetween;
+	& .resetPass{
+		margin-left: 15px;
+	}
+}
