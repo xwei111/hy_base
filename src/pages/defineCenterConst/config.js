@@ -1,22 +1,4 @@
-var checkCode = (rule, value, callback) => {
-  const reg = /^[A-Za-z0-9_]+$/
-  if (reg.test(value)) {
-    callback()
-  } else {
-    return callback(new Error('正确编码格式为:长度在1~100之间,只能包含字母数字或者下划线'))
-  }
-}
-var checkOrder = (rule, value, callback) => {
-  if (value === '' || value === null) {
-    callback()
-    return
-  }
-  if (value > 0 && value < 100) {
-    callback()
-  } else {
-    return callback(new Error('顺序只能为1-99的数字'))
-  }
-}
+import regex from '@/utils/regex'
 
 export const formConfig = {
   searchConfig:[
@@ -50,16 +32,16 @@ export const formConfig = {
       { required: true, message: '常量名称不能为空', trigger: 'blur' }
     ],
     dictHeadType: [
-      { required: true, message: '常量类型不能为空', trigger: 'blur' }
+      { required: true, message: '常量类型不能为空', trigger: 'change' }
     ],
     dictHeadSort: [
       { required: false, trigger: 'blur' },
-      { validator: checkOrder, trigger: 'blur' }
+      { validator: regex.checkOrder, trigger: 'blur' }
     ],
     dictHeadId: [
       { required: true, message: '常量编码不能为空', trigger: 'blur' },
       { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' },
-      { validator: checkCode, trigger: 'blur' }
+      { validator: regex.checkCode, trigger: 'blur' }
     ]
   },
   constValConfig: [
@@ -82,12 +64,12 @@ export const formConfig = {
     ],
     dictSort: [
       { required: false, trigger: 'blur' },
-      { validator: checkOrder, trigger: 'blur' }
+      { validator: regex.checkOrder, trigger: 'blur' }
     ],
     dictId: [
       { required: true, message: '常量值编码不能为空', trigger: 'blur' },
       { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' },
-      { validator: checkCode, trigger: 'blur' }
+      { validator: regex.checkCode, trigger: 'blur' }
     ]
   }
 }

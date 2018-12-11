@@ -33,6 +33,7 @@
     </div>
     <hyModal :dialogVisible='userDialogVisible' :title='title' @closeHandle='closeHandle'>
       <hyForm 
+        class='hy_userFrom'
         :formConfig='userformConfig' 
         :formData='userformData' 
         :ifInLine='ifInLine' 
@@ -121,5 +122,5 @@ export default {
 }
 </script>
 <style scoped>
- @import './index.css'; 
+@import './index.css'; 
 </style>

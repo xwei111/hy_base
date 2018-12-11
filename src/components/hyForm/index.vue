@@ -13,6 +13,13 @@
           :value="v.value">
         </el-option>
       </el-select>
+      <!-- cascader -->
+      <el-cascader
+        v-if="item.type == 'cascader'"
+        :options="item.options"
+        v-model="item.selectedOptions"
+        @change="selectCasc">
+      </el-cascader>
 
     </el-form-item>
 
@@ -123,12 +130,19 @@ export default {
     },
     onCancle() {
       this.$emit('onCancle')
+    },
+    selectCasc(e) {
+      console.log('e', e)
     }
   },
   watch: {
     clearAll(val){
       this.$refs.form.resetFields()
       this.$refs.form.clearValidate()
+    },
+    'formData.password'(val) {
+      const reg = /^(?![^a-zA-Z]+$)(?!\D+$)/
+      if(reg.test(val)) this.formData.checkPassword&&this.$nextTick(()=>this.$refs.form.validateField('checkPassword'))
     }
   }
 }

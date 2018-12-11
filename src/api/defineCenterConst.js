@@ -14,9 +14,9 @@ export const addConst = (obj) => {
 	return axios.post(`/hyitframe_sys_dict/dictHead/${appId}`, obj).then(res => res.data)
 }
 // 常量修改
-export const changeConst = (params) => {
+export const changeConst = ({ uuid, obj}) => {
 	const { appId } = store.state
-	return axios.put(`/hyitframe_sys_dict/dictHead/${appId}/${params.uuid}`, params.obj).then(res => res.data)
+	return axios.put(`/hyitframe_sys_dict/dictHead/${appId}/${uuid}`, obj).then(res => res.data)
 }
 // 常量值新增
 export const addConstVal = (obj) => {
@@ -24,15 +24,15 @@ export const addConstVal = (obj) => {
   return axios.post(`/hyitframe_sys_dict/dict/${appId}`, obj).then(res => res.data)
 }
 // 常量值修改
-export const changeConstVal = (params) => {
+export const changeConstVal = ({ uuid, obj }) => {
 	const { appId } = store.state
-  return axios.put(`/hyitframe_sys_dict/dict/${appId}/${params.uuid}`, params.obj).then(res => res.data)
+  return axios.put(`/hyitframe_sys_dict/dict/${appId}/${uuid}`, obj).then(res => res.data)
 }
 // 常量删除
-export const deleteConst = (params) => {
+export const deleteConst = ({ uuid, obj }) => {
 	const { appId } = store.state
-	const deleteObj = qs.stringify(params.obj)
-  return axios.delete(`/hyitframe_sys_dict/dictHead/${appId}/${params.uuid}?${deleteObj}`).then(res => res.data)
+	const deleteObj = qs.stringify(obj)
+  return axios.delete(`/hyitframe_sys_dict/dictHead/${appId}/${uuid}?${deleteObj}`).then(res => res.data)
 }
 // 常量值删除
 export const deleteConstVal = (uuid) => {
