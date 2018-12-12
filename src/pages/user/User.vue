@@ -19,6 +19,7 @@
 <script>
 import {mapMutations} from 'vuex'
 import { loginOut } from '@/api/login'
+import { config } from '@/utils/config' 
 export default {
   name: 'User',
   data () {
@@ -30,7 +31,7 @@ export default {
       if(e==='back'){
         loginOut().then((data)=>{
           if(data.statusCode == '200') {
-            window.location.href='/'
+            window.location.href = config.loginOutUrl
             this.$nextTick(()=>{
               this.setMenuRouterData(null)
               this.setToken({})

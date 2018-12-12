@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class='configThemeBox' v-show='showConfigTheme' >
       <div class='config'>
-        <p class='title'>设置主题</p>
+        <p class='title'>系统设置</p>
 
         <ul class='themeList'>
           <li class='themeFirst' :class="selectId==0?'selectTheme':''" @click='changeThemeHandle(0)'>

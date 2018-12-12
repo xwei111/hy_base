@@ -14,6 +14,8 @@ const httpObj = {
   development: devhost
 }
 
+const loginOutUrl = NODE_ENV === 'development' ? '/' : '/frame-front'
+
 export const config = {
 	ifToWelcome: false,//首次进入是否进入欢迎页
 	ifShowTabs: true,//是否显示tabs
@@ -26,5 +28,6 @@ export const config = {
 	    hy_element: '#409EFF' //element主题色
 	},
 	themeType: '1',//布局（1,2,3,4）
-	baseURL: httpObj[NODE_ENV] //ipbaseURL
+	baseURL: httpObj[NODE_ENV], //ipbaseURL
+	loginOutUrl: loginOutUrl
 }

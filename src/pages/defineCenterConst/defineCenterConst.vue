@@ -52,7 +52,6 @@ import { formConfig, columnConfig } from './config'
 export default {
   name: 'defineCenterConst',
   data () {
-    
     return {
       ifIsExpand: true,
       isHaveEdit: true,

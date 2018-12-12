@@ -80,7 +80,7 @@ const themeMixin = {
       })
     },
     removeRepeat(val,obj) {
-      return new Promise((resolve,reject)=>{
+      return new Promise((resolve)=>{
         let ifRepeat = false
         ifRepeat = val.some((item) => item.name == obj.id)
         resolve(ifRepeat)
@@ -158,7 +158,7 @@ const themeMixin = {
       })
     },
     _getActivePage(e) {
-      const { childMenu, threeTopMenuData } = this
+      const { childMenu } = this
       Object.keys(childMenu).map((item)=>{
         if(childMenu[item].name == e.key){
           this.$nextTick(()=>{ this.topMenuId = this.childMenu[item].id })

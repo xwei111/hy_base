@@ -32,7 +32,7 @@ export const formConfig = {
       { required: true, message: '常量名称不能为空', trigger: 'blur' }
     ],
     dictHeadType: [
-      { required: true, message: '常量类型不能为空', trigger: 'change' }
+      { required: true, message: '常量类型不能为空', trigger: ['blur','change'] }
     ],
     dictHeadSort: [
       { required: false, trigger: 'blur' },

@@ -42,6 +42,8 @@
         :clearAll ='userDialogVisible'
         @onSubmit='useronSubmit' 
         @onCancle='onCancle'
+        @formSelectchange='formSelectchange'
+        @formcascchange='formcascchange'
       >
       </hyForm>
     </hyModal>
@@ -51,7 +53,7 @@
 <script>
 import { hyTable, hyForm, hyModal } from '@/components'
 import { formConfig, columnConfig } from './config'
-import { getUserData } from '@/api/defineCenterUser'
+import { getUserData , getUserOrg, getUserCom, getUserDep } from '@/api/defineCenterUser'
 export default {
   name: 'defineCenterUser',
   data () {
@@ -83,6 +85,7 @@ export default {
   },
   created() {
     this._getUserData(this.searchObj)
+    this._getUserOrg()
   },
   methods: {
     onSubmit(e) {
@@ -111,12 +114,38 @@ export default {
     closeHandle() {
       this.userDialogVisible = false
     },
+    formSelectchange(e, key) {
+      if(key === 'organizeId') {
+        const options = this.userformConfig[8].options
+        const v = options.find(item=>item.value == e)
+        const obj = { orgId: v.value, orgName: v.label }
+        this._getUserCom(obj)
+      }
+    },
+    formcascchange(e, key) {
+      if(key === 'orgId') {
+        getUserDep({companyId: e}).then(data=>console.log('data', data))
+      }
+    },
     _getUserData(searchObj){
       this.m_apiFn(getUserData,searchObj).then((data)=>{
         const { rows, total } = data.result
         this.tableData = rows
         this.total = total
       })
+    },
+    _getUserOrg() {
+      this.m_apiFn(getUserOrg).then((data)=>{
+        const { result } = data
+        result.map(item=>{
+          item.label = item.organizeName
+          item.value = item.organizeId
+        })
+        this.userformConfig[8].options = result
+      })
+    },
+    _getUserCom(obj) {
+      getUserCom(obj).then(data=>this.userformConfig[9].options = data.result[0].children?data.result[0].children:[])
     }
   }
 }

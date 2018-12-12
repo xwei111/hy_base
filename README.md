@@ -29,5 +29,6 @@ npm run test
 npm run lint
 ```
 
+打包退出路径默认'/frame-front',请根据自己项目在utils/config中配置loginOutUr进行配置
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
