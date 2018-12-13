@@ -155,15 +155,25 @@ export default {
   },
   watch: {
     clearAll(val){
-      this.$nextTick(()=>{
         this.$refs.form.resetFields()
         this.$refs.form.clearValidate()
         this.selectFormItem = ''
-      })
     },
     'formData.password'(val) {
       const reg = /^(?![^a-zA-Z]+$)(?!\D+$)/
       if(reg.test(val)) this.formData.checkPassword&&this.$nextTick(()=>this.$refs.form.validateField('checkPassword'))
+    },
+    'formData.workflowState'(val) {
+      val&&this.$nextTick(()=>this.$refs.form.validateField('workflowState'))
+    },
+    'formData.orgId'(val) {
+      val&&this.$nextTick(()=>this.$refs.form.validateField('orgId'))
+    },
+    'formData.comId'(val) {
+      val.length>0&&this.$nextTick(()=>this.$refs.form.validateField('comId'))
+    },
+    'formData.depId'(val) {
+      val.length>0&&this.$nextTick(()=>this.$refs.form.validateField('depId'))
     }
   }
 }

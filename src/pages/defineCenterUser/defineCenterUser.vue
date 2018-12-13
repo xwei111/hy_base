@@ -76,7 +76,7 @@ export default {
       ifSearch2: true,
       title: '新增用户',
       userformConfig: formConfig.userformConfig,
-      userformData: formConfig.userformData,
+      userformData: {},
       userRules: formConfig.userRules,
       userOrgList: [],
       orgType: ''
@@ -90,11 +90,6 @@ export default {
   created() {
     this._getUserData(this.searchObj)
     this._getUserOrg()
-  },
-  watch: {
-    userDialogVisible(val) {
-      !val&&this.$nextTick(()=>this._resetSelect(true))
-    }
   },
   methods: {
     onSubmit(e) {
@@ -115,20 +110,43 @@ export default {
       this.title = '新增用户'
       this.userDialogVisible = true
       this.userformConfig = formConfig.userformConfig
-      this.userformData = formConfig.userformData
+      this.userformData = { password: '', checkPassword: '', userId: '', userName: '', workflowState: '', tel: '', email: '', shortTel: '', orgId: '', comId: [], depId: []}
     },
     async editHandle(e) {
       const { userId } = e.row
-      this.userformConfig = formConfig.changeUserformConfig
       const userDetail = await this._userDetail(userId)
-      await this._setDetail(userDetail)
-      await this._openDetail()
+      this.userformConfig = formConfig.changeUserformConfig
+      this.userRules = formConfig.userRules
+      userDetail && this._setDetail(userDetail)
+    },
+    async _setDetail(userDetail) {
+      const { userName, workflowState, tel, email, shortTel, deptList } = userDetail.result
+      await this._filterUserOrg(workflowState,this.userformConfig[6])
+      await this._getUserCom(this.userformConfig[7], { orgId: deptList[0].orgId, orgName: deptList[0].orgName })
+      await this._getUserDep(this.userformConfig[8], { companyId: deptList[0].compId })
+      this.$nextTick(()=>{
+        this.userformData = { 
+          userId: userDetail.result.userId, 
+          userName: userName, 
+          workflowState: workflowState, 
+          tel: tel, 
+          email: email, 
+          shortTel: shortTel, 
+          orgId: deptList[0].orgId, 
+          comId: [deptList[0].compId], 
+          depId: [deptList[0].deptId]
+        }
+        this._openDetail()
+      })
     },
     async useronSubmit(e) {
       switch(this.title) {
         case '新增用户':
           const key = await this.m_loginRcs()
           await this._addSubmit(e,key)
+          break
+        case '修改用户':
+          console.log('userformData',this.userformData)
           break
       }
     },
@@ -161,7 +179,7 @@ export default {
         this.userformData.depId = []
       }
       if(key === 'workflowState') {
-        await this._resetSelect(false)
+        await this._resetSelect()
         await this._resetVal()
         await this._filterUserOrg(e,this.userformConfig[8])
       }
@@ -171,26 +189,6 @@ export default {
         this._getUserDep(this.userformConfig[10], {companyId: e[e.length -1]})
         this.userformData.depId = []
       }
-    },
-    async _setDetail(userDetail) {
-      const { userId, userName, workflowState, tel, email, shortTel, deptList } = userDetail.result
-      await this.$nextTick(()=>{
-        this.userformData = { 
-          userId: userId, 
-          userName: userName, 
-          workflowState: workflowState, 
-          tel: tel, 
-          email: email, 
-          shortTel: shortTel, 
-          orgId: deptList[0].orgId, 
-          comId: [deptList[0].compId], 
-          depId: [deptList[0].deptId]
-        }
-      })
-      await this._filterUserOrg(workflowState,this.userformConfig[6])
-      await this._getUserCom(this.userformConfig[7], { orgId: deptList[0].orgId, orgName: deptList[0].orgName })
-      await this._getUserDep(this.userformConfig[8], { companyId: deptList[0].compId })
-      
     },
     _openDetail() {
       this.title = '修改用户'
@@ -204,21 +202,12 @@ export default {
       userObj.deptList[0] = { userId: userId, orgId: orgId, compId: comId[comId.length - 1], deptId: depId[depId.length - 1], orgType: this.orgType }
       this._addUser(userObj)
     },
-    _resetSelect(type) {
-      this.$nextTick(() => {
-        if(this.title == '新增用户'){
-          this.userformConfig[8].disabled = type
-          this.userformConfig[9].disabled = type
-          this.userformConfig[10].disabled = type
-          this._resetOptions(8,9,10)
-        }else{
-          this.userformConfig[6].disabled = type
-          this.userformConfig[7].disabled = type
-          this.userformConfig[8].disabled = type
-          this._resetOptions(6,7,8)
-        }
-        
-      })
+    _resetSelect() {
+      if(this.title == '新增用户'){
+        this._resetOptions(8,9,10)
+      }else{
+        this._resetOptions(6,7,8)
+      }
     },
     _resetVal() {
       this.userformData.orgId = ''
@@ -235,7 +224,7 @@ export default {
         if(e == 1 || e == 2){
           item.orgType == 'SYS_ORG_ACTIVITY'&&this.$nextTick(()=>v.options.push({ label: item.organizeName, value: item.organizeId, orgType: item.orgType }))
         }else{
-          this.$nextTick(()=>v.options.push({ label: item.organizeName, value: item.orgId, orgType: item.orgType }))
+          this.$nextTick(()=>v.options.push({ label: item.organizeName, value: item.organizeId, orgType: item.orgType }))
         }
       })
     },
@@ -263,7 +252,7 @@ export default {
       this.m_apiFn(addUser, userObj, '新增用户成功').then(data=>this._successFn())
     },
     _userDetail(userId) {
-      return this.m_apiFn(userDetail, userId).then((data)=> data)
+       return this.m_apiFn(userDetail, userId).then((data)=>data)
     }
   }
 }

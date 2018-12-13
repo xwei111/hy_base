@@ -16,14 +16,14 @@ const configChild3 = [
   { type: 'input', placeholder: '请输入座机号', key: 'shortTel', label: '座机号' }
 ]
 const configChild4 = [
-  { type: 'select', placeholder: '请选择组织', key: 'orgId', label: '所属组织', disabled: true, options: [] },
-  { type: 'cascader', placeholder: '请选择单位', key: 'comId', label: '所属单位', disabled: true, options: [], props: { value: 'orgId', label: 'orgName' } },
-  { type: 'cascader', placeholder: '请选择部门', key: 'depId', label: '所属部门', disabled: true, options: [], props: { value: 'id' }  }
+  { type: 'select', placeholder: '请选择组织', key: 'orgId', label: '所属组织', options: [] },
+  { type: 'cascader', placeholder: '请选择单位', key: 'comId', label: '所属单位', options: [], props: { value: 'orgId', label: 'orgName' } },
+  { type: 'cascader', placeholder: '请选择部门', key: 'depId', label: '所属部门', options: [], props: { value: 'id' }  }
 ]
 const configChild5 = [
-  { type: 'select', placeholder: '请选择组织', key: 'orgId', label: '所属组织', disabled: false, options: [] },
-  { type: 'cascader', placeholder: '请选择单位', key: 'comId', label: '所属单位', disabled: false, options: [], props: { value: 'orgId', label: 'orgName' } },
-  { type: 'cascader', placeholder: '请选择部门', key: 'depId', label: '所属部门', disabled: false, options: [], props: { value: 'id' }  }
+  { type: 'select', placeholder: '请选择组织', key: 'orgId', label: '所属组织', options: [] },
+  { type: 'cascader', placeholder: '请选择单位', key: 'comId', label: '所属单位', options: [], props: { value: 'orgId', label: 'orgName' } },
+  { type: 'cascader', placeholder: '请选择部门', key: 'depId', label: '所属部门', options: [], props: { value: 'id' }  }
 ]
 const formData1 = { userId: '', userName: '', workflowState: '', tel: '', email: '', shortTel: '', orgId: '', comId: [], depId: []}
 const formData2 = { password: '', checkPassword: ''}
@@ -41,13 +41,13 @@ export const formConfig = {
   userRules:{
 		userId: [
       { required: true, message: '用户名不能为空', trigger: 'blur' },
-      {  validator: regex.checkUsername, trigger: ['blur','change'] }
+      {  validator: regex.checkUsername, trigger: ['blur'] }
     ],
     userName: [
       { required: true, message: '姓名不能为空', trigger: 'blur' }
     ],
     workflowState: [
-      { required: true, message: '请选择人员标签', trigger: ['blur','change'] }
+      { required: true, message: '请选择人员标签', trigger: ['blur'] }
     ],
     password: [
     	{ required: true, message: '请输入密码', trigger: 'blur' },
@@ -59,21 +59,19 @@ export const formConfig = {
     ],
     tel: [
     	{ required: true, message: '请输入手机号', trigger: 'blur' },
-      {  validator: regex.checkPhone, trigger: ['blur','change'] }
+      {  validator: regex.checkPhone, trigger: ['blur'] }
     ],
     email: [
-      {  validator: regex.checkEmail, trigger: ['blur','change'] }
+      {  validator: regex.checkEmail, trigger: ['blur'] }
     ],
     orgId: [
-    	{ required: true, message: '请选择组织', trigger: ['blur','change'] }
+    	{ required: true, message: '请选择组织', trigger: ['blur'] }
     ],
     comId: [
-    	{ required: true, message: '请选择单位', trigger: ['blur'] },
-      {  validator: regex.checkcomId, trigger: 'change' }
+    	{ required: true, message: '请选择单位', trigger: ['blur'] }
     ],
     depId: [
-    	{ required: true, message: '请选择部门', trigger: ['blur'] },
-      {  validator: regex.checkdepId, trigger: 'change' }
+    	{ required: true, message: '请选择部门', trigger: ['blur'] }
     ]
 	}
 }
