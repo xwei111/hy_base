@@ -113,6 +113,18 @@ class Regex{
       callback('邮箱格式错误')
     }
   }
+  checkcomId(rule, value, callback) {
+    if(value.length<0) {
+      return callback(new Error('请选择单位'))
+    }
+    callback()
+  }
+  checkdepId(rule, value, callback) {
+    if(value.length<0) {
+      return callback(new Error('请选择部门'))
+    }
+    callback()
+  }
 }
 
 export default new Regex()

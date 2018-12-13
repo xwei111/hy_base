@@ -5,7 +5,7 @@
       <!-- input -->
       <el-input v-if="item.type == 'input'" v-model="formData[item.key]" :placeholder="item.placeholder" :disabled='item.disabled' :type='item.kind' @click.native='formSelectClick(item.key)'></el-input>
       <!-- select -->
-      <el-select v-if="item.type == 'select'" class='elFormSelect' v-model="formData[item.key]" :placeholder="item.placeholder" @click.native='formSelectClick(item.key)' @change='formSelectchange'>
+      <el-select v-if="item.type == 'select'" class='elFormSelect' v-model="formData[item.key]" :disabled='item.disabled' :placeholder="item.placeholder" @click.native='formSelectClick(item.key)' @change='formSelectchange'>
         <el-option
           v-for="v in item.options"
           :key="v.value"
@@ -17,9 +17,12 @@
       <!-- cascader -->
       <el-cascader
         v-if="item.type == 'cascader'"
+        change-on-select
+        :show-all-levels="showAllLevels"
         :options="item.options"
         :props = "item.props"
-        v-model="item.selectedOptions"
+        :disabled='item.disabled'
+        v-model="formData[item.key]"
         @click.native='formSelectClick(item.key)'
         @change="formcascchange"
       >
@@ -73,6 +76,10 @@ export default {
     clearAll: {
       type: Boolean,
       default:()=>true
+    },
+    showAllLevels: {
+      type: Boolean,
+      default:()=>false
     },
     formConfig:{
       type: Array,
@@ -148,8 +155,11 @@ export default {
   },
   watch: {
     clearAll(val){
-      this.$refs.form.resetFields()
-      this.$refs.form.clearValidate()
+      this.$nextTick(()=>{
+        this.$refs.form.resetFields()
+        this.$refs.form.clearValidate()
+        this.selectFormItem = ''
+      })
     },
     'formData.password'(val) {
       const reg = /^(?![^a-zA-Z]+$)(?!\D+$)/

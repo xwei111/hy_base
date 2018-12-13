@@ -13,17 +13,6 @@
 @custom-selector :--inputSize select, input, textarea;
 @custom-selector :--hSize h1,h2,h3,h4,h5,h6;
 
-:root{
-	--elformtwo{
-		width: 49%;
-		display: inline-block;
-	};
-	--elformthree{
-		width: 32.5%;
-		display: inline-block;
-	}
-}
-
 html,body{
 	@apply --baseLayout;
 }
@@ -76,48 +65,4 @@ a {
 	height: 100% !important;
 	display: flex;
 	@apply --flexCenter;
-}
-.scrollBox{
-	& .el-scrollbar__wrap{
-		overflow-x: hidden !important;
-	}
-}
-
-.hy_searchBox{
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding: 10px 20px 0 0;
-  & .hy_searchAddBtn{
-    margin-top: 1px;
-    margin-right: 20px;
-  }
-}
-
-.hy_userFrom{
-	& .el-form-item:nth-of-type(4){
-		@apply --elformtwo;
-		margin-right: 2%;
-	}
-	& .el-form-item:nth-of-type(6){
-		@apply --elformtwo;
-		margin-right: 2%;
-	}
-	& .el-form-item:nth-of-type(5){
-		@apply --elformtwo;
-	}
-	& .el-form-item:nth-of-type(7){
-		@apply --elformtwo;
-	}
-	& .el-form-item:nth-of-type(9){
-		@apply --elformthree;
-		margin-right: 1.25%;
-	}
-	& .el-form-item:nth-of-type(10){
-		@apply --elformthree;
-		margin-right: 1.25%;
-	}
-	& .el-form-item:nth-of-type(11){
-		@apply --elformthree;
-	}
 }

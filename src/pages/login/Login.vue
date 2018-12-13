@@ -19,7 +19,7 @@
 import addMenuRouter from '@/utils/addMenuRouter'
 import RSA from '@/utils/RSA'
 import {mapMutations} from 'vuex'
-import { login, loginRcs, getWorkBenchData } from '@/api/login'
+import { login, getWorkBenchData } from '@/api/login'
 
 export default {
   name: 'Login',
@@ -67,15 +67,10 @@ export default {
       }
     },
     _loginRcs(){
-      return loginRcs().then((res)=>{
-        if(res.statusCode == '200'){
-          RSA.setMaxDigits(130)
-          const { publicExponent, publicModulus } = res.result
-          const { username, password } = this.loginForm
-          const key = new RSA.RSAKeyPair(publicExponent, '', publicModulus)
-          const pass = password.length < 32 ? RSA.encryptedString(key, encodeURIComponent(password)) : password;
-          return { username: username, pass: pass }
-        }
+      return this.m_loginRcs().then((key)=>{
+        const { username, password } = this.loginForm
+        const pass = password.length < 32 ? RSA.encryptedString(key, encodeURIComponent(password)) : password;
+        return { username: username, pass: pass }
       })
     },
     _login(username,pass){

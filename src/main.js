@@ -7,6 +7,7 @@ import store from './store'
 //  reset CSS
 import "normalize.css/normalize.css";
 import '@/styles/base.css'
+import '@/styles/hyCommon.css'
 
 import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)

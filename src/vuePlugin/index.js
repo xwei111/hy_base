@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import store from '@/store'
+import { loginRcs } from '@/api/login'
+import RSA from '@/utils/RSA'
 
 const vuePlugin = () => {
   Vue.mixin({
@@ -38,6 +40,20 @@ const vuePlugin = () => {
               message&&this.$message.success(message)
               resolve(data)
             }
+          })
+        })
+      },
+      /**
+       *加密
+       */
+      m_loginRcs() {
+        return new Promise((resolve)=>{
+          return this.m_apiFn(loginRcs).then((data)=>{
+            RSA.setMaxDigits(130)
+            const { publicExponent, publicModulus } = data.result
+            const key = new RSA.RSAKeyPair(publicExponent, '', publicModulus)
+            resolve(key)
+            return key
           })
         })
       },
