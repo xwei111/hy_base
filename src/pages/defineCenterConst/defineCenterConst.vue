@@ -71,7 +71,7 @@ export default {
       title: '新增常量',
       ifInLine: false,
       constformConfig: formConfig.constConfig,
-      constformData: formConfig.constFormData,
+      constformData: JSON.parse(JSON.stringify(formConfig.constFormData)),
       constRules: formConfig.constRules,
       uuid: ''
     }
@@ -100,7 +100,7 @@ export default {
       this._getConstData(this.searchObj)
     },
     addConstHandle() {
-      this._setForm('新增常量',formConfig.constConfig,formConfig.constFormData,false,formConfig.constRules)
+      this._setForm('新增常量',formConfig.constConfig,JSON.parse(JSON.stringify(formConfig.constFormData)),false,formConfig.constRules)
       this.constDialogVisible = true
     },
     closeHandle() {
@@ -140,7 +140,7 @@ export default {
       this.constDialogVisible = true
     },
     addHandle(e){
-      this._setForm('新增常量值',formConfig.constValConfig,formConfig.constValFormData,false,formConfig.constValRules)
+      this._setForm('新增常量值',formConfig.constValConfig,JSON.parse(JSON.stringify(formConfig.constValFormData)),false,formConfig.constValRules)
       this.constformData.dictHeadId = e.row.dictHeadId
       this.constformData.parentId = e.row.floor === '1' ? '' : e.row.id
       this.constDialogVisible = true

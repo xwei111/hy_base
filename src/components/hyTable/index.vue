@@ -181,7 +181,7 @@ export default {
       this.$emit('addHandle', scope)
     },
     changePassHandle(scope) {
-      this.$emit('addHandle', scope)
+      this.$emit('changePassHandle', scope)
     },
     suspendHandle(scope) {
       this.$emit('suspendHandle', scope)

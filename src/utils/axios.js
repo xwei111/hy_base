@@ -17,7 +17,7 @@ service.interceptors.request.use(config => {
   if(token.accessToken) {
     config.headers['accessToken'] = token.accessToken
   }
-  if(token['x-hy-token']) {
+  if(token.xHyToken) {
     config.headers['x-hy-token'] = token.xHyToken
   }
   // loading开启

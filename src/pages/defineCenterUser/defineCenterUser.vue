@@ -2,7 +2,7 @@
   <div>
     <div class='userTopSearch'>
       <div class='resetPass'>
-        <el-button size='small' type='primary'>重置密码</el-button>
+        <el-button size='small' type='primary' @click='resetPass'>重置密码</el-button>
       </div>
       <div class='hy_searchBox'>
         <hyForm :formConfig='formConfig' :formData='formData' @onSubmit='onSubmit' :ifSearch1='ifSearch1'></hyForm>
@@ -19,6 +19,9 @@
       :isHaveDelete='isHaveDelete' 
       :isHaveChangePass='isHaveChangePass'
       @editHandle='editHandle'
+      @deleteHandle='deleteHandle'
+      @changePassHandle='changePassHandle'
+      @handleSelectionChange='handleSelectionChange'
     >
     </hyTable>
     <div class='hy_searchBox'>
@@ -34,7 +37,7 @@
     </div>
     <hyModal :dialogVisible='userDialogVisible' :title='title' @closeHandle='closeHandle'>
       <hyForm 
-        :class="title=='新增用户'?'hy_userFrom':'hy_changeUserFrom'"
+        :class="title=='新增用户'?'hy_userFrom' : title=='修改用户' ? 'hy_changeUserFrom' : ''"
         :formConfig='userformConfig' 
         :formData='userformData' 
         :ifInLine='ifInLine' 
@@ -52,10 +55,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { hyTable, hyForm, hyModal } from '@/components'
 import { formConfig, columnConfig } from './config'
-import { getUserData , getUserOrg, getUserCom, getUserDep, addUser, userDetail } from '@/api/defineCenterUser'
+import { getUserData , getUserOrg, getUserCom, getUserDep, addUser, userDetail, changeUser, deleteUser, changePass, resetPass } from '@/api/defineCenterUser'
 import RSA from '@/utils/RSA'
+import common from '@/utils/common'
 export default {
   name: 'defineCenterUser',
   data () {
@@ -76,10 +81,14 @@ export default {
       ifSearch2: true,
       title: '新增用户',
       userformConfig: formConfig.userformConfig,
-      userformData: {},
+      userformData: JSON.parse(JSON.stringify(formConfig.userformData)),
       userRules: formConfig.userRules,
       userOrgList: [],
-      orgType: ''
+      orgType: '',
+      uuid: '',
+      passDetail: {},
+      selectDetail: [],
+      idList: []
     }
   },
   components: {
@@ -106,11 +115,32 @@ export default {
       this.searchObj.page = e
       this._getUserData(this.searchObj)
     },
+    handleSelectionChange(e) {
+      this.selectDetail = e
+    },
+    resetPass() {
+      const len = this.selectDetail.length
+      let idList = []
+      if(len>0) {
+        this.selectDetail.map(item=>{
+          idList.push(item.userId)
+        })
+        this.idList = idList
+        this.title = '重置密码'
+        this.userDialogVisible = true
+        this.userformConfig = formConfig.resetConfig
+        this.userformData = JSON.parse(JSON.stringify(formConfig.resetData))
+        this.userRules = formConfig.resetRules
+      }else{
+        this.$message.warning('请先选择用户')
+      }
+    },
     addUserHandle() {
       this.title = '新增用户'
       this.userDialogVisible = true
       this.userformConfig = formConfig.userformConfig
-      this.userformData = { password: '', checkPassword: '', userId: '', userName: '', workflowState: '', tel: '', email: '', shortTel: '', orgId: '', comId: [], depId: []}
+      this.userformData = JSON.parse(JSON.stringify(formConfig.userformData))
+      this.userRules = formConfig.userRules
     },
     async editHandle(e) {
       const { userId } = e.row
@@ -120,10 +150,18 @@ export default {
       userDetail && this._setDetail(userDetail)
     },
     async _setDetail(userDetail) {
-      const { userName, workflowState, tel, email, shortTel, deptList } = userDetail.result
+      const { userName, workflowState, tel, email, shortTel, deptList, uuid } = userDetail.result
+      this.uuid = uuid
+      this.orgType = deptList&&deptList.length?deptList[0].orgType:''
       await this._filterUserOrg(workflowState,this.userformConfig[6])
-      await this._getUserCom(this.userformConfig[7], { orgId: deptList[0].orgId, orgName: deptList[0].orgName })
-      await this._getUserDep(this.userformConfig[8], { companyId: deptList[0].compId })
+      if(deptList.length&&deptList[0].orgId&&deptList[0].orgName) {
+        var comList = await this._getUserCom(this.userformConfig[7], { orgId: deptList[0].orgId, orgName: deptList[0].orgName })
+        var comIdAry = await common.getTreeDeepArr(deptList[0].compId,comList,'orgId')
+      }
+      if(deptList.length&&deptList[0].compId) {
+        var depList = await this._getUserDep(this.userformConfig[8], { companyId: deptList[0].compId })
+        var depIdAry = await common.getTreeDeepArr(deptList[0].deptId,depList,'id')
+      }
       this.$nextTick(()=>{
         this.userformData = { 
           userId: userDetail.result.userId, 
@@ -132,12 +170,30 @@ export default {
           tel: tel, 
           email: email, 
           shortTel: shortTel, 
-          orgId: deptList[0].orgId, 
-          comId: [deptList[0].compId], 
-          depId: [deptList[0].deptId]
+          orgId: deptList.length&&deptList[0].orgId?deptList[0].orgId:'', 
+          comId: comIdAry?comIdAry:[], 
+          depId: depIdAry?depIdAry:[]
         }
         this._openDetail()
       })
+    },
+    deleteHandle(e) {
+      const { userId, uuid, workflowState } = e.row
+      const obj = {
+        operationUserId: this.userId,
+        userId: userId,
+        uuid: uuid,
+        workflowState: workflowState
+      }
+      this._deleteUser(obj)
+    },
+    changePassHandle(e) {
+      this.passDetail = e.row
+      this.title = '修改密码'
+      this.userDialogVisible = true
+      this.userformConfig = formConfig.passwordConfig
+      this.userformData = JSON.parse(JSON.stringify(formConfig.passwordData))
+      this.userRules = formConfig.passRules
     },
     async useronSubmit(e) {
       switch(this.title) {
@@ -146,35 +202,41 @@ export default {
           await this._addSubmit(e,key)
           break
         case '修改用户':
-          console.log('userformData',this.userformData)
+          this._addSubmit(e)
           break
+        case '修改密码':
+          const passkey = await this.m_loginRcs()
+          this._addSubmit(e, passkey)
+        case '重置密码':
+          const resetkey = await this.m_loginRcs()
+          this._addSubmit(e, resetkey)
       }
     },
     onCancle() {
       this.userDialogVisible = false
-      if(this.title == '新增用户'){
-        this._resetOptions(8,9,10)
-      }else{
-        this._resetOptions(6,7,8)
-      }
+      this._resetSelect()
       this.orgType = ''
     },
     closeHandle() {
       this.userDialogVisible = false
-      if(this.title == '新增用户'){
-        this._resetOptions(8,9,10)
-      }else{
-        this._resetOptions(6,7,8)
-      }
+      this._resetSelect()
       this.orgType = ''
     },
     async formSelectchange(e, key) {
       if(key === 'orgId') {
-        const options = this.userformConfig[8].options
+        if(this.title == '新增用户') {
+          var options = this.userformConfig[8].options
+        }else{
+          var options = this.userformConfig[6].options
+        }
         const v = options.find(item=>item.value == e)
         const obj = { orgId: v.value, orgName: v.label }
         this.orgType = v.orgType
-        this._getUserCom(this.userformConfig[9],obj)
+        if(this.title == '新增用户') {
+          this._getUserCom(this.userformConfig[9],obj)
+        }else{
+          this._getUserCom(this.userformConfig[7],obj)
+        }
         this.userformData.comId = []
         this.userformData.depId = []
       }
@@ -186,7 +248,11 @@ export default {
     },
     formcascchange(e, key) {
       if(key === 'comId') {
-        this._getUserDep(this.userformConfig[10], {companyId: e[e.length -1]})
+        if(this.title == '新增用户') {
+          this._getUserDep(this.userformConfig[10], {companyId: e[e.length -1]})
+        }else{
+          this._getUserDep(this.userformConfig[8], {companyId: e[e.length -1]})
+        }
         this.userformData.depId = []
       }
     },
@@ -195,24 +261,46 @@ export default {
       this.userDialogVisible = true
     },
     _addSubmit(e,key) {
-      const { checkPassword, password, depId, comId, orgId, userId, ...userObj } = e
-      userObj.userId = userId
-      userObj.password = RSA.encryptedString(key, encodeURIComponent(password))
-      userObj.deptList = []
-      userObj.deptList[0] = { userId: userId, orgId: orgId, compId: comId[comId.length - 1], deptId: depId[depId.length - 1], orgType: this.orgType }
-      this._addUser(userObj)
+      if(this.title == '新增用户') {
+        const { checkPassword, password, depId, comId, orgId, userId, ...userObj } = e
+        userObj.userId = userId
+        userObj.password = RSA.encryptedString(key, encodeURIComponent(password))
+        userObj.deptList = []
+        userObj.deptList[0] = { userId: userId, orgId: orgId, compId: comId[comId.length - 1], deptId: depId[depId.length - 1], orgType: this.orgType }
+        this._addUser(userObj)
+      }else if(this.title == '修改用户'){
+        const { depId, comId, orgId, userId, ...userObj } = e
+        userObj.userId = userId
+        userObj.uuid = this.uuid
+        userObj.deptList = []
+        userObj.deptList[0] = { userId: userId, orgId: orgId, compId: comId[comId.length - 1], deptId: depId[depId.length - 1], orgType: this.orgType }
+        this._changeUser(userObj)
+      }else if(this.title == '修改密码') {
+        if(e.oldPassword == e.newPassword) return this.$message.warning('旧密码与新密码不能一样')
+        const oldpass = RSA.encryptedString(key, encodeURIComponent(e.oldPassword))
+        const newpass = RSA.encryptedString(key, encodeURIComponent(e.newPassword))
+        const obj = { password: newpass, userId: this.passDetail.userId, workflowState: this.passDetail.workflowState }
+        this._changePass(oldpass, obj)
+      }else if(this.title == '重置密码') {
+        let resetObj = {}
+        resetObj.userId = this.userId
+        resetObj.password = RSA.encryptedString(key, encodeURIComponent(e.adminPassword))
+        resetObj.newPassword = RSA.encryptedString(key, encodeURIComponent(e.password))
+        resetObj.userIdList = this.idList
+        this._resetPass(resetObj)
+      }
     },
     _resetSelect() {
       if(this.title == '新增用户'){
         this._resetOptions(8,9,10)
-      }else{
+      }else if(this.title == '修改用户'){
         this._resetOptions(6,7,8)
       }
     },
     _resetVal() {
       this.userformData.orgId = ''
-      this.userformData.comId = []
-      this.userformData.depId = []
+      this.userformData.comId = this.userformData.comId.length>0 ? [] :this.userformData.comId
+      this.userformData.depId = this.userformData.depId.length>0 ? [] :this.userformData.depId
     },
     _resetOptions(a,b,c) {
       this.userformConfig[a].options = []
@@ -228,7 +316,7 @@ export default {
         }
       })
     },
-    _getUserData(searchObj){
+    _getUserData(searchObj) {
       this.m_apiFn(getUserData,searchObj).then((data)=>{
         const { rows, total } = data.result
         this.tableData = rows
@@ -239,21 +327,50 @@ export default {
       this.m_apiFn(getUserOrg).then((data)=>this.userOrgList = data.result)
     },
     _getUserCom(v,obj) {
-      this.m_apiFn(getUserCom, obj).then(data=>v.options = data.result&&data.result[0].children?data.result[0].children:[])
+      return this.m_apiFn(getUserCom, obj).then(data=>v.options = data.result&&data.result[0]&&data.result[0].children?data.result[0].children:[])
     },
     _getUserDep(v,obj) {
-      this.m_apiFn(getUserDep, obj).then(data=>v.options = data.result&&data.result.children?data.result.children:[])
+      return this.m_apiFn(getUserDep, obj).then(data=>v.options = data.result&&data.result.children?data.result.children:[])
     },
     _successFn() {
       this._getUserData(this.searchObj)
       this.userDialogVisible = false
     },
     _addUser(userObj) {
-      this.m_apiFn(addUser, userObj, '新增用户成功').then(data=>this._successFn())
+      this.m_apiFn(addUser, userObj, '新增用户成功').then(data=>{
+        this._successFn()
+        this._resetOptions(8,9,10)
+      })
+    },
+    _changeUser(userObj) {
+      this.m_apiFn(changeUser, userObj, '修改用户成功').then(data=>{
+        this._successFn()
+        this._resetOptions(6,7,8)
+      })
     },
     _userDetail(userId) {
        return this.m_apiFn(userDetail, userId).then((data)=>data)
+    },
+    _deleteUser(userObj) {
+      this.m_apiFn(deleteUser, userObj, '删除成功').then(data=>this._successFn())
+    },
+    _changePass(oldPass, obj) {
+      changePass(oldPass, obj).then((data)=>{
+        if(data.statusCode == '200') {
+          this.$message.success('修改成功')
+          this.passDetail = {}
+          this._successFn()
+        }
+      })
+    },
+    _resetPass(obj) {
+      this.m_apiFn(resetPass, obj, '重置成功').then(data=>this._successFn())
     }
+  },
+  computed: {
+    ...mapGetters([
+      'userId'
+    ])
   }
 }
 </script>

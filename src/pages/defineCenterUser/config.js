@@ -1,6 +1,5 @@
 import regex from '@/utils/regex'
 
-
 const configChild1 = [
   { type: 'input', placeholder: '请输入用户名', key: 'userId', label: '用户名' },
   { type: 'input', placeholder: '请输入姓名', key: 'userName', label: '姓名' },
@@ -25,8 +24,6 @@ const configChild5 = [
   { type: 'cascader', placeholder: '请选择单位', key: 'comId', label: '所属单位', options: [], props: { value: 'orgId', label: 'orgName' } },
   { type: 'cascader', placeholder: '请选择部门', key: 'depId', label: '所属部门', options: [], props: { value: 'id' }  }
 ]
-const formData1 = { userId: '', userName: '', workflowState: '', tel: '', email: '', shortTel: '', orgId: '', comId: [], depId: []}
-const formData2 = { password: '', checkPassword: ''}
 
 export const formConfig = {
 	searchConfig:[
@@ -36,8 +33,7 @@ export const formConfig = {
 	searchData: { userId: '', userName: '' },
 	userformConfig: [...configChild1,...configChild2,...configChild3,...configChild4],
   changeUserformConfig: [...configChild1,...configChild3,...configChild5],
-	userformData: { ...formData1, ...formData2 },
-	changeUserformData: { ...formData1 },
+	userformData: { userId: '', userName: '', workflowState: '', tel: '', email: '', shortTel: '', orgId: '', comId: [], depId: [], password: '', checkPassword: ''},
   userRules:{
 		userId: [
       { required: true, message: '用户名不能为空', trigger: 'blur' },
@@ -47,7 +43,7 @@ export const formConfig = {
       { required: true, message: '姓名不能为空', trigger: 'blur' }
     ],
     workflowState: [
-      { required: true, message: '请选择人员标签', trigger: ['blur'] }
+      { required: true, message: '请选择人员标签', trigger: ['blur', 'change'] }
     ],
     password: [
     	{ required: true, message: '请输入密码', trigger: 'blur' },
@@ -65,15 +61,48 @@ export const formConfig = {
       {  validator: regex.checkEmail, trigger: ['blur'] }
     ],
     orgId: [
-    	{ required: true, message: '请选择组织', trigger: ['blur'] }
+    	{ required: true, message: '请选择组织', trigger: ['blur', 'change'] }
     ],
     comId: [
-    	{ required: true, message: '请选择单位', trigger: ['blur'] }
+    	{ required: true, message: '请选择单位', trigger: ['blur', 'change'] }
     ],
     depId: [
-    	{ required: true, message: '请选择部门', trigger: ['blur'] }
+    	{ required: true, message: '请选择部门', trigger: ['blur', 'change'] }
     ]
-	}
+	},
+  passwordConfig: [
+    { type: 'input', placeholder: '请输入旧密码', key: 'oldPassword', label: '旧密码', kind: 'password' },
+    { type: 'input', placeholder: '请输入新密码', key: 'newPassword', label: '新密码', kind: 'password' },
+  ],
+  passwordData: { oldPassword: '', newPassword: '' },
+  passRules: {
+    oldPassword: [
+      { required: true, message: '旧密码不能为空', trigger: 'blur' }
+    ],
+    newPassword: [
+      { required: true, message: '新密码不能为空', trigger: 'blur' },
+      {  validator: regex.checkPass, trigger: ['blur'] }
+    ]
+  },
+  resetConfig: [
+    { type: 'input', placeholder: '请输入管理员密码', key: 'adminPassword', label: '管理员密码', kind: 'password' },
+    { type: 'input', placeholder: '请输入新密码', key: 'password', label: '新密码', kind: 'password' },
+    { type: 'input', placeholder: '请再次输入新密码', key: 'checkPassword', label: '确认新密码', kind: 'password' }
+  ],
+  resetData: { adminPassword: '', password: '',  checkPassword: '' },
+  resetRules: {
+    adminPassword: [
+      { required: true, message: '请输入管理员密码', trigger: 'blur' }
+    ],
+    password: [
+      { required: true, message: '请输入新密码', trigger: 'blur' },
+      {  validator: regex.checkPass, trigger: ['blur','change'] }
+    ],
+    checkPassword: [
+      { required: true, message: '请再次输入新密码', trigger: 'blur' },
+      {  validator: regex.checkPassAgain, trigger: ['blur','change'] }
+    ],
+  }
 }
 
 export const columnConfig = [

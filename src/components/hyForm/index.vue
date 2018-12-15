@@ -129,6 +129,9 @@ export default {
       selectFormItem: ''
     }
   },
+  created() {
+    this.selectFormItem = ''
+  },
   methods: {
     onSubmit() {
       this.$refs.form.validate((valid) => {
@@ -154,26 +157,21 @@ export default {
     }
   },
   watch: {
-    clearAll(val){
-        this.$refs.form.resetFields()
-        this.$refs.form.clearValidate()
-        this.selectFormItem = ''
-    },
+    // clearAll(val){
+    //   this.$refs.form.resetFields()
+    //   if(!val) {
+    //     this.$nextTick(()=>{
+    //       console.log('formData',this.formData)
+    //       this.$refs.form.clearValidate()
+    //     })
+    //   }else{
+    //     this.$nextTick(()=>this.$refs.form.clearValidate())
+    //   }
+    //   this.selectFormItem = ''
+    // },
     'formData.password'(val) {
       const reg = /^(?![^a-zA-Z]+$)(?!\D+$)/
       if(reg.test(val)) this.formData.checkPassword&&this.$nextTick(()=>this.$refs.form.validateField('checkPassword'))
-    },
-    'formData.workflowState'(val) {
-      val&&this.$nextTick(()=>this.$refs.form.validateField('workflowState'))
-    },
-    'formData.orgId'(val) {
-      val&&this.$nextTick(()=>this.$refs.form.validateField('orgId'))
-    },
-    'formData.comId'(val) {
-      val.length>0&&this.$nextTick(()=>this.$refs.form.validateField('comId'))
-    },
-    'formData.depId'(val) {
-      val.length>0&&this.$nextTick(()=>this.$refs.form.validateField('depId'))
     }
   }
 }

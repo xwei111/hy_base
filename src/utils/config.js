@@ -2,7 +2,8 @@ const { NODE_ENV } = process.env
 // const devhost = 'http://172.30.8.72:8080/hyitframeworks-dubbox-rest-war' // 覃兆俊
 // const devhost = 'http://172.30.9.162:8080/hyitframeworks-dubbox-rest-war' // 陈志
 // const devhost = 'http://172.30.9.43:8080/hyitframeworks-dubbox-rest-war' // 伟伟
-const devhost = 'http://172.30.83.29:8080/hyitframeworks-dubbox-rest-war' // 服务器
+// const devhost = 'http://172.30.83.29:8080/hyitframeworks-dubbox-rest-war' // 服务器
+const devhost = 'http://172.30.83.107:8080/hyitframeworks-dubbox-rest-war' //集成专网
 
 const productionUrl = window.location.hostname === '172.30.83.29' ? 'http://172.30.83.29:8080/hyitframeworks-dubbox-rest-war' : 'http://183.134.216.97:58080/hyitframeworks-dubbox-rest-war'
 

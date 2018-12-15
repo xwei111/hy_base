@@ -1,6 +1,6 @@
 import { mapGetters, mapMutations } from 'vuex'
 import { config } from '@/utils/config' 
-import common from '@/utils/common.js'
+import common from '@/utils/common'
 
 const themeMixin = {
   data () {

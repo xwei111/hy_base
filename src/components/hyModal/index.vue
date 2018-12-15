@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="title" :visible.sync="dialogVisible" width="600px" :before-close="closeHandle" :top='modalTop'>
+    <el-dialog :title="title" :visible.sync="dialogVisible" v-if='dialogVisible' width="600px" :before-close="closeHandle" :top='modalTop'>
       <slot></slot>
       <span slot="footer" class="dialog-footer" v-if='ifCancle||ifSure' >
         <el-button @click="closeHandle" v-if='ifCancle'>取 消</el-button>
