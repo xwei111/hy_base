@@ -175,7 +175,11 @@ export default {
       this.$emit('editHandle', scope)
     },
     deleteHandle(scope) {
-      this.$emit('deleteHandle', scope)
+      this.$confirm('是否删除?',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(()=>this.$emit('deleteHandle', scope))
     },
     addHandle(scope){
       this.$emit('addHandle', scope)

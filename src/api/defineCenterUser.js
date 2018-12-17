@@ -47,9 +47,9 @@ export const deleteUser = (obj) => {
 	return axios.delete(`/hyitframe_sys_user/user/${appId}/zhnyxxpt?${strObj}`).then(res => res.data)
 }
 // 修改密码
-export const changePass = (oldpass, obj) => {
+export const changePass = (params) => {
 	const { appId } = store.state
-	return axios.put(`/hyitframe_sys_user/user/${appId}/zhnyxxpt/${oldpass}`, obj).then(res => res.data)
+	return axios.put(`/hyitframe_sys_user/user/${appId}/zhnyxxpt/${params.oldpass}`, params.obj).then(res => res.data)
 }
 // 重置密码
 export const resetPass = (obj) => {

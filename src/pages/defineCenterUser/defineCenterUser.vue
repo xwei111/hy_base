@@ -122,35 +122,27 @@ export default {
       const len = this.selectDetail.length
       let idList = []
       if(len>0) {
-        this.selectDetail.map(item=>{
-          idList.push(item.userId)
-        })
+        const { resetConfig, resetData, resetRules } = formConfig
+        this.selectDetail.map(item => idList.push(item.userId))
         this.idList = idList
-        this.title = '重置密码'
-        this.userDialogVisible = true
-        this.userformConfig = formConfig.resetConfig
-        this.userformData = JSON.parse(JSON.stringify(formConfig.resetData))
-        this.userRules = formConfig.resetRules
+        this._setFormInfo('重置密码', resetConfig, JSON.parse(JSON.stringify(resetData)), resetRules)
       }else{
         this.$message.warning('请先选择用户')
       }
     },
     addUserHandle() {
-      this.title = '新增用户'
-      this.userDialogVisible = true
-      this.userformConfig = formConfig.userformConfig
-      this.userformData = JSON.parse(JSON.stringify(formConfig.userformData))
-      this.userRules = formConfig.userRules
+      const { userformConfig, userformData, userRules } = formConfig
+      this._setFormInfo('新增用户', userformConfig, JSON.parse(JSON.stringify(userformData)), userRules)
     },
     async editHandle(e) {
       const { userId } = e.row
       const userDetail = await this._userDetail(userId)
-      this.userformConfig = formConfig.changeUserformConfig
-      this.userRules = formConfig.userRules
       userDetail && this._setDetail(userDetail)
     },
     async _setDetail(userDetail) {
       const { userName, workflowState, tel, email, shortTel, deptList, uuid } = userDetail.result
+      const { changeUserformConfig, userformData, userRules } = formConfig
+      this._setFormInfo('修改用户', changeUserformConfig, {}, userRules)
       this.uuid = uuid
       this.orgType = deptList&&deptList.length?deptList[0].orgType:''
       await this._filterUserOrg(workflowState,this.userformConfig[6])
@@ -174,42 +166,54 @@ export default {
           comId: comIdAry?comIdAry:[], 
           depId: depIdAry?depIdAry:[]
         }
-        this._openDetail()
       })
     },
     deleteHandle(e) {
       const { userId, uuid, workflowState } = e.row
-      const obj = {
-        operationUserId: this.userId,
-        userId: userId,
-        uuid: uuid,
-        workflowState: workflowState
-      }
+      const obj = { operationUserId: this.userId, userId: userId, uuid: uuid, workflowState: workflowState }
       this._deleteUser(obj)
     },
     changePassHandle(e) {
       this.passDetail = e.row
-      this.title = '修改密码'
-      this.userDialogVisible = true
-      this.userformConfig = formConfig.passwordConfig
-      this.userformData = JSON.parse(JSON.stringify(formConfig.passwordData))
-      this.userRules = formConfig.passRules
+      const { passwordConfig, passwordData, passRules } = formConfig
+      this._setFormInfo('修改密码', passwordConfig, JSON.parse(JSON.stringify(passwordData)), passRules)
     },
     async useronSubmit(e) {
       switch(this.title) {
         case '新增用户':
           const key = await this.m_loginRcs()
-          await this._addSubmit(e,key)
+          var { checkPassword, password, depId, comId, orgId, userId, ...userObj } = e
+          userObj.userId = userId
+          userObj.password = RSA.encryptedString(key, encodeURIComponent(password))
+          userObj.deptList = []
+          userObj.deptList[0] = { userId: userId, orgId: orgId, compId: comId[comId.length - 1], deptId: depId[depId.length - 1], orgType: this.orgType }
+          this._addUser(userObj)
           break
         case '修改用户':
-          this._addSubmit(e)
+          var { depId, comId, orgId, userId, ...userObj } = e
+          userObj.userId = userId
+          userObj.uuid = this.uuid
+          userObj.deptList = []
+          userObj.deptList[0] = { userId: userId, orgId: orgId, compId: comId[comId.length - 1], deptId: depId[depId.length - 1], orgType: this.orgType }
+          this._changeUser(userObj)
           break
         case '修改密码':
           const passkey = await this.m_loginRcs()
-          this._addSubmit(e, passkey)
+          if(e.oldPassword == e.newPassword) return this.$message.warning('旧密码与新密码不能一样')
+          const oldpass = RSA.encryptedString(passkey, encodeURIComponent(e.oldPassword))
+          const newpass = RSA.encryptedString(passkey, encodeURIComponent(e.newPassword))
+          const obj = { password: newpass, userId: this.passDetail.userId, workflowState: this.passDetail.workflowState }
+          this._changePass(oldpass, obj)
+          break
         case '重置密码':
           const resetkey = await this.m_loginRcs()
-          this._addSubmit(e, resetkey)
+          let resetObj = {}
+          resetObj.userId = this.userId
+          resetObj.password = RSA.encryptedString(resetkey, encodeURIComponent(e.adminPassword))
+          resetObj.newPassword = RSA.encryptedString(resetkey, encodeURIComponent(e.password))
+          resetObj.userIdList = this.idList
+          this._resetPass(resetObj)
+          break
       }
     },
     onCancle() {
@@ -233,9 +237,9 @@ export default {
         const obj = { orgId: v.value, orgName: v.label }
         this.orgType = v.orgType
         if(this.title == '新增用户') {
-          this._getUserCom(this.userformConfig[9],obj)
+          this._getUserCom(this.userformConfig[9], obj)
         }else{
-          this._getUserCom(this.userformConfig[7],obj)
+          this._getUserCom(this.userformConfig[7], obj)
         }
         this.userformData.comId = []
         this.userformData.depId = []
@@ -243,7 +247,7 @@ export default {
       if(key === 'workflowState') {
         await this._resetSelect()
         await this._resetVal()
-        await this._filterUserOrg(e,this.userformConfig[8])
+        await this._filterUserOrg(e, this.userformConfig[8])
       }
     },
     formcascchange(e, key) {
@@ -256,45 +260,18 @@ export default {
         this.userformData.depId = []
       }
     },
-    _openDetail() {
-      this.title = '修改用户'
+    _setFormInfo(title, config, formdata, rules) {
+      this.title = title
+      this.userformConfig = config
       this.userDialogVisible = true
-    },
-    _addSubmit(e,key) {
-      if(this.title == '新增用户') {
-        const { checkPassword, password, depId, comId, orgId, userId, ...userObj } = e
-        userObj.userId = userId
-        userObj.password = RSA.encryptedString(key, encodeURIComponent(password))
-        userObj.deptList = []
-        userObj.deptList[0] = { userId: userId, orgId: orgId, compId: comId[comId.length - 1], deptId: depId[depId.length - 1], orgType: this.orgType }
-        this._addUser(userObj)
-      }else if(this.title == '修改用户'){
-        const { depId, comId, orgId, userId, ...userObj } = e
-        userObj.userId = userId
-        userObj.uuid = this.uuid
-        userObj.deptList = []
-        userObj.deptList[0] = { userId: userId, orgId: orgId, compId: comId[comId.length - 1], deptId: depId[depId.length - 1], orgType: this.orgType }
-        this._changeUser(userObj)
-      }else if(this.title == '修改密码') {
-        if(e.oldPassword == e.newPassword) return this.$message.warning('旧密码与新密码不能一样')
-        const oldpass = RSA.encryptedString(key, encodeURIComponent(e.oldPassword))
-        const newpass = RSA.encryptedString(key, encodeURIComponent(e.newPassword))
-        const obj = { password: newpass, userId: this.passDetail.userId, workflowState: this.passDetail.workflowState }
-        this._changePass(oldpass, obj)
-      }else if(this.title == '重置密码') {
-        let resetObj = {}
-        resetObj.userId = this.userId
-        resetObj.password = RSA.encryptedString(key, encodeURIComponent(e.adminPassword))
-        resetObj.newPassword = RSA.encryptedString(key, encodeURIComponent(e.password))
-        resetObj.userIdList = this.idList
-        this._resetPass(resetObj)
-      }
+      this.userformData = formdata
+      this.userRules = rules
     },
     _resetSelect() {
       if(this.title == '新增用户'){
-        this._resetOptions(8,9,10)
+        this._resetOptions(8, 9, 10)
       }else if(this.title == '修改用户'){
-        this._resetOptions(6,7,8)
+        this._resetOptions(6, 7, 8)
       }
     },
     _resetVal() {
@@ -339,28 +316,25 @@ export default {
     _addUser(userObj) {
       this.m_apiFn(addUser, userObj, '新增用户成功').then(data=>{
         this._successFn()
-        this._resetOptions(8,9,10)
+        this._resetOptions(8, 9, 10)
       })
     },
     _changeUser(userObj) {
       this.m_apiFn(changeUser, userObj, '修改用户成功').then(data=>{
         this._successFn()
-        this._resetOptions(6,7,8)
+        this._resetOptions(6, 7, 8)
       })
     },
     _userDetail(userId) {
-       return this.m_apiFn(userDetail, userId).then((data)=>data)
+       return this.m_apiFn(userDetail, userId).then(data=>data)
     },
     _deleteUser(userObj) {
       this.m_apiFn(deleteUser, userObj, '删除成功').then(data=>this._successFn())
     },
-    _changePass(oldPass, obj) {
-      changePass(oldPass, obj).then((data)=>{
-        if(data.statusCode == '200') {
-          this.$message.success('修改成功')
-          this.passDetail = {}
-          this._successFn()
-        }
+    _changePass(oldpass, obj) {
+      this.m_apiFn(changePass, { oldpass: oldpass, obj: obj }, '修改成功').then(data=>{
+        this.passDetail = {}
+        this._successFn()
       })
     },
     _resetPass(obj) {

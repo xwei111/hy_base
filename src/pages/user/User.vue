@@ -29,21 +29,19 @@ export default {
   methods: {
     handleCommand(e) {
       if(e==='back'){
-        loginOut().then((data)=>{
-          if(data.statusCode == '200') {
-            window.location.href = config.loginOutUrl
-            this.$nextTick(()=>{
-              this.setMenuRouterData(null)
-              this.setToken({})
-              this.setTabData([])
-              this.setSelectTab('')
-              this.setAppid('')
-              this.setUserid('')
-              this.setMenulist([])
-              this.setKeepAliveArr({})
-              window.sessionStorage.removeItem('selectTopId')
-            })
-          }
+        this.m_apiFn(loginOut).then(data=>{
+          window.location.href = config.loginOutUrl
+          this.$nextTick(()=>{
+            this.setMenuRouterData(null)
+            this.setToken({})
+            this.setTabData([])
+            this.setSelectTab('')
+            this.setAppid('')
+            this.setUserid('')
+            this.setMenulist([])
+            this.setKeepAliveArr({})
+            window.sessionStorage.removeItem('selectTopId')
+          })
         })
       }
     },

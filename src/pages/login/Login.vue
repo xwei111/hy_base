@@ -74,23 +74,19 @@ export default {
       })
     },
     _login(username,pass){
-      return login(username,pass).then((res)=>{
-        if(res.statusCode == '200') {
-          const { accessToken } = res.result
-          const { expireTime, token } = JSON.parse(accessToken)
-          const saveToken = { accessToken: token, xHyToken: res.result['x-hy-token'] }
-          const userInfo = { username: username, pass: pass }          
-          return { username: username, userInfo: userInfo, token: saveToken }
-        }
+      return this.m_apiFn(login, {username: username, pass: pass}).then(res=>{
+        const { accessToken } = res.result
+        const { expireTime, token } = JSON.parse(accessToken)
+        const saveToken = { accessToken: token, xHyToken: res.result['x-hy-token'] }
+        const userInfo = { username: username, pass: pass }          
+        return { username: username, userInfo: userInfo, token: saveToken }
       })
     },
     _getWorkBenchData(username) {
-      return getWorkBenchData(username).then((res)=>{
-        if(res.statusCode == '200') return res.result
-      })
+      return this.m_apiFn(getWorkBenchData, username).then(res=>res.result)
     },
     _addMenuRouter() {
-      return addMenuRouter.getMenuRouter().then((data)=> data)
+      return addMenuRouter.getMenuRouter().then(data=> data)
     },
     _setUserInfoCookie(userInfo) {
       if(this.checked) {

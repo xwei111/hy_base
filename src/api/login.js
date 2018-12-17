@@ -8,8 +8,8 @@ export const loginRcs = () => {
 	return axios.get(`/hyitframe_sys_login/getPublicKey/${id}`).then(res => res.data)
 }
 // 登录
-export const login = (username,pass) => {
-    return axios.get(`/hyitframe_sys_login/login/${id}/${username}/${pass}`).then(res => res.data)
+export const login = (obj) => {
+    return axios.get(`/hyitframe_sys_login/login/${id}/${obj.username}/${obj.pass}`).then(res => res.data)
 }
 // 获得workbench数据(导航数据)
 export const getWorkBenchData = (username) => {
